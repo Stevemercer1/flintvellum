@@ -3,105 +3,173 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#181714">
   <meta name="description" content="An online auction house for authenticated collectibles: collectible watches, graded trading cards, and sports and film memorabilia.">
   <title>FlintVellum | Good collections change hands.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&amp;display=swap" rel="stylesheet">
   <style>
     :root {
-      --brand-primary: #183B56;
-      --brand-accent: #B58B45;
-      --neutral-light: #F4F6F8;
-      --neutral-dark: #17212B;
-      --page-background: var(--neutral-light);
-      --text: var(--neutral-dark);
-      --heading: var(--brand-primary);
-      --hero-background: var(--brand-primary);
-      --hero-text: var(--neutral-light);
-      --link: var(--brand-primary);
-      --focus: var(--brand-primary);
-      --rule: color-mix(in srgb, var(--brand-primary) 18%, transparent);
-      --heading-font: 'DM Serif Display', Georgia, serif;
-      --body-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      --content-width: 1120px;
+      --page: #181714;
+      --surface: #201E1A;
+      --text: #F1EBDD;
+      --muted: #BBB3A3;
+      --accent: #C6A873;
+      --ink: #151410;
+      --rule: color-mix(in srgb, var(--text) 19%, transparent);
+      --illustration: color-mix(in srgb, var(--accent) 64%, var(--page));
+      --hero-overlay: color-mix(in srgb, var(--ink) 73%, transparent);
+      --heading-font: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+      --body-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --content-width: 1280px;
+      --gutter: clamp(24px, 5.5vw, 80px);
+      --section-space: clamp(72px, 8.5vw, 120px);
     }
     * { box-sizing: border-box; }
-    html { scroll-padding-top: 24px; }
-    body { margin: 0; background: var(--page-background); color: var(--text); font: 16px/1.65 var(--body-font); }
-    a { color: var(--link); text-underline-offset: .22em; }
-    a:hover { text-decoration-thickness: 2px; }
-    a:focus-visible { outline: 3px solid var(--focus); outline-offset: 5px; border-radius: 2px; }
+    html { scroll-padding-top: 32px; }
+    body { margin: 0; background: var(--page); color: var(--text); font: 16px/1.75 var(--body-font); -webkit-font-smoothing: antialiased; }
+    ::selection { color: var(--ink); background: var(--accent); }
+    a { color: inherit; text-underline-offset: .3em; text-decoration-thickness: 1px; }
+    a:hover { color: var(--accent); }
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 7px; }
     h1, h2, h3, p { margin-top: 0; }
-    h1, h2, h3 { font-family: var(--heading-font); font-weight: 400; color: var(--heading); line-height: 1.12; }
-    h1 { font-size: clamp(2.7rem, 6vw, 4.9rem); letter-spacing: -.035em; margin-bottom: 24px; }
-    h2 { font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -.025em; margin-bottom: 24px; }
-    h3 { font-size: 1.55rem; margin-bottom: 12px; }
-    p { max-width: 66ch; }
-    .wrap { max-width: var(--content-width); margin-inline: auto; padding-inline: 32px; }
-    .skip { position: absolute; left: 16px; top: -100px; padding: 12px; background: var(--page-background); z-index: 2; }
-    .skip:focus { top: 12px; }
-    header .wrap { min-height: 110px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-    .logo { display: block; width: 249px; height: auto; color: var(--brand-primary); }
-    nav { display: flex; gap: 26px; flex-wrap: wrap; font-size: .9rem; }
-    nav a { text-decoration: none; }
-    .hero { padding-block: 34px 76px; }
-    .hero-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 56px; align-items: center; }
-    .tagline { font-size: .95rem; margin-bottom: 20px; }
-    .intro { font-size: 1.1rem; max-width: 43ch; margin-bottom: 28px; }
-    .button { display: inline-block; padding: 12px 22px; color: var(--hero-text); background: var(--hero-background); border: 1px solid var(--hero-background); border-radius: 3px; text-decoration: none; font-weight: 600; }
-    .hero-art { margin: 0; padding: 28px; background: var(--hero-background); color: var(--hero-text); border-radius: 6px; }
-    .hero-art svg { width: 100%; height: auto; display: block; }
-    .art-outline { fill: none; stroke: currentColor; stroke-width: 2; }
-    .art-detail { fill: none; stroke: var(--brand-accent); stroke-width: 2; }
-    figcaption { border-top: 1px solid currentColor; padding-top: 15px; margin-top: 12px; font-size: .8rem; }
-    section.content { padding-block: 64px; border-top: 1px solid var(--rule); }
-    .steps { list-style: none; counter-reset: step; display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; padding: 0; margin: 36px 0 28px; }
-    .steps li { counter-increment: step; }
-    .steps li::before { content: counter(step); display: inline-grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--brand-accent); border-radius: 50%; color: var(--heading); margin-bottom: 20px; }
-    .steps p { margin-bottom: 0; }
-    .terms { font-size: .9rem; margin-bottom: 0; }
-    .categories { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 32px; }
-    .categories article { padding-left: 20px; border-left: 3px solid var(--brand-accent); }
-    .categories p { margin-bottom: 0; }
-    .about-grid { display: grid; grid-template-columns: .75fr 1.25fr; gap: 56px; }
-    .about-grid p:last-child { margin-bottom: 0; }
-    .role { padding-block: 28px; border-top: 1px solid var(--rule); }
-    .role h3 { margin-bottom: 8px; }
-    .role-location { font-size: .9rem; margin-bottom: 12px; }
-    .role p:last-child { margin-bottom: 0; }
-    .recruiter { margin-top: 28px; margin-bottom: 0; font-size: .95rem; }
-    footer { border-top: 1px solid var(--rule); padding-block: 30px; font-size: .8rem; }
-    footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    h1, h2, h3 { font-family: var(--heading-font); font-weight: 400; }
+    h1 { font-size: clamp(4.5rem, 8.3vw, 7.5rem); line-height: .96; letter-spacing: -.045em; margin-bottom: 30px; }
+    h2 { font-size: clamp(2.8rem, 4.2vw, 4rem); line-height: 1.06; letter-spacing: -.035em; margin-bottom: 0; text-wrap: balance; }
+    h3 { font-size: 2.1rem; line-height: 1.15; letter-spacing: -.02em; margin-bottom: 12px; }
+    p { max-width: 65ch; }
+    svg { display: block; max-width: 100%; }
+    .wrap { width: min(100%, calc(var(--content-width) + 2 * var(--gutter))); margin-inline: auto; padding-inline: var(--gutter); }
+    .skip { position: absolute; top: 12px; left: 12px; z-index: 10; transform: translateY(-160%); padding: 10px 18px; background: var(--text); color: var(--ink); }
+    .skip:focus { transform: translateY(0); }
+    .site-header { border-bottom: 1px solid var(--rule); }
+    .header-inner { min-height: 106px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+    .brand { display: inline-flex; align-items: center; gap: 15px; text-decoration: none; flex-shrink: 0; }
+    .brand-mark { width: 38px; height: 38px; color: var(--accent); }
+    .brand-name { font-family: var(--heading-font); font-size: 2.25rem; font-weight: 500; letter-spacing: -.055em; line-height: 1; }
+    nav { display: flex; align-items: center; gap: clamp(20px, 3.2vw, 46px); }
+    nav a { padding-block: 12px; font-size: .79rem; letter-spacing: .025em; text-decoration: none; }
+    .hero { position: relative; isolation: isolate; background-color: var(--surface); background-image: url('hero.jpg'); background-size: cover; background-position: center; }
+    .hero::before { content: ''; position: absolute; z-index: -1; inset: 0; background: var(--hero-overlay); }
+    .hero-inner { min-height: 720px; min-height: min(820px, max(720px, 85svh)); display: flex; flex-direction: column; justify-content: space-between; padding-top: clamp(72px, 8vw, 120px); }
+    .hero-copy { max-width: 830px; padding-bottom: 66px; }
+    .eyebrow { color: var(--accent); font-size: .69rem; line-height: 1.6; font-weight: 500; letter-spacing: .19em; text-transform: uppercase; }
+    .tagline { margin-bottom: 29px; }
+    .hero .eyebrow { color: var(--text); }
+    .intro { color: var(--text); max-width: 48ch; margin-bottom: 30px; font-size: 1.04rem; line-height: 1.8; }
+    .button { display: inline-flex; align-items: center; justify-content: space-between; gap: 30px; min-height: 54px; padding: 14px 22px; color: var(--ink); background: var(--accent); border: 1px solid var(--accent); font-size: .79rem; font-weight: 500; text-decoration: none; }
+    .button:hover { background: var(--text); border-color: var(--text); color: var(--ink); }
+    .button svg { width: 17px; height: 17px; flex-shrink: 0; }
+    .hero-caption { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-block: 23px; border-top: 1px solid var(--rule); }
+    .hero-caption p { margin: 0; font-size: .73rem; letter-spacing: .045em; }
+    .hero-caption .hero-location { flex-shrink: 0; color: var(--text); }
+    .content { padding-block: var(--section-space); }
+    .section-label { margin-bottom: 23px; }
+    .consignment { display: grid; grid-template-columns: .85fr 1.15fr; gap: 36px 9%; }
+    .consignment h2 { max-width: 14ch; }
+    .steps { list-style: none; counter-reset: step; margin: 0; padding: 0; }
+    .steps li { counter-increment: step; position: relative; padding: 0 0 36px 71px; }
+    .steps li + li { padding-top: 32px; border-top: 1px solid var(--rule); }
+    .steps li:last-child { padding-bottom: 0; }
+    .steps li::before { content: counter(step, decimal-leading-zero); position: absolute; left: 0; top: 0; color: var(--accent); font-family: var(--heading-font); font-size: 2.4rem; line-height: 1; }
+    .steps li + li::before { top: 32px; }
+    .steps h3 { font-size: 1.9rem; }
+    .steps p { margin-bottom: 0; color: var(--muted); font-size: .94rem; }
+    .terms { grid-column: 1 / -1; max-width: none; margin: 18px 0 0; padding: 24px 0 0; border-top: 1px solid var(--rule); font-size: .78rem; color: var(--muted); line-height: 1.9; }
+    .collectibles { border-top: 1px solid var(--rule); }
+    .collectibles-heading { max-width: 660px; margin-bottom: 56px; }
+    .categories { border-top: 1px solid var(--rule); }
+    .category { display: grid; grid-template-columns: 160px 1fr 1.15fr; align-items: center; gap: 6%; padding-block: 36px; border-bottom: 1px solid var(--rule); }
+    .category h3 { margin: 0; font-size: clamp(2rem, 2.7vw, 2.6rem); max-width: 13ch; }
+    .category p { margin: 0; color: var(--muted); font-size: .94rem; }
+    .object-art { width: 160px; height: 144px; color: var(--illustration); fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
+    .object-art .detail { stroke: var(--accent); }
+    .about-band { background: var(--surface); border-block: 1px solid var(--rule); }
+    .about-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 9%; }
+    .about-grid h2 { max-width: 12ch; }
+    .about-copy { padding-top: 37px; }
+    .about-copy p { color: var(--muted); font-size: .98rem; }
+    .about-copy p + p { margin-top: 26px; }
+    .about-copy p:last-child { margin-bottom: 0; }
+    .roles-heading { margin-bottom: 42px; }
+    .role { display: grid; grid-template-columns: 1fr 1fr; column-gap: 10%; padding-block: 34px; border-top: 1px solid var(--rule); }
+    .role h3 { grid-column: 1; max-width: 26ch; font-size: 1.85rem; margin-bottom: 12px; }
+    .role-location { grid-column: 1; font-size: .75rem; color: var(--muted); margin-bottom: 0; }
+    .role p:last-child { grid-column: 2; grid-row: 1 / 3; align-self: center; margin-bottom: 0; color: var(--muted); font-size: .92rem; }
+    .recruiter { max-width: none; margin: 16px 0 0; padding-top: 28px; border-top: 1px solid var(--rule); font-size: .8rem; color: var(--muted); }
+    .recruiter a { display: inline-block; padding-block: 6px; color: var(--text); overflow-wrap: anywhere; }
+    .recruiter a:hover { color: var(--accent); }
+    footer { border-top: 1px solid var(--rule); padding-block: 36px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
     footer p { margin: 0; }
-    @media (max-width: 780px) {
-      .wrap { padding-inline: 24px; }
-      header .wrap { padding-block: 24px; min-height: auto; flex-wrap: wrap; gap: 18px; }
-      nav { gap: 22px; }
-      .hero { padding-block: 30px 48px; }
-      .hero-grid, .about-grid { grid-template-columns: 1fr; gap: 28px; }
-      .hero-art { max-width: 490px; }
-      .steps, .categories { grid-template-columns: 1fr; gap: 30px; }
-      section.content { padding-block: 44px; }
-      .steps { margin-top: 24px; }
-      .steps li::before { margin-bottom: 12px; }
-      .logo { width: 230px; }
+    .footer-wordmark { font-family: var(--heading-font); font-size: 2rem; letter-spacing: -.05em; }
+    .footer-location { color: var(--muted); font-size: .72rem; letter-spacing: .05em; }
+    @media (min-width: 1600px) { .hero { background-position: center 45%; } }
+    @media (max-width: 960px) {
+      .consignment, .about-grid { grid-template-columns: .9fr 1.1fr; column-gap: 6%; }
+      .steps li { padding-left: 55px; }
+      .steps h3 { font-size: 1.7rem; }
+      .category { grid-template-columns: 110px 1fr 1.15fr; gap: 5%; }
+      .object-art { width: 110px; height: 130px; }
+      .role { column-gap: 7%; }
+    }
+    @media (max-width: 700px) {
+      .header-inner { min-height: 0; flex-direction: column; align-items: flex-start; gap: 15px; padding-block: 25px 15px; }
+      .brand-name { font-size: 2rem; }
+      .brand-mark { width: 32px; height: 32px; }
+      nav { width: 100%; justify-content: space-between; gap: 12px; }
+      nav a { font-size: .74rem; }
+      .hero { background-position: 60% center; }
+      .hero-inner { min-height: 650px; padding-top: 75px; }
+      .hero-copy { padding-bottom: 60px; }
+      h1 { font-size: clamp(3.3rem, 10.3vw, 4.8rem); line-height: 1.01; letter-spacing: -.045em; }
+      .tagline { font-size: .6rem; letter-spacing: .15em; margin-bottom: 25px; }
+      .intro { font-size: .96rem; line-height: 1.8; }
+      .button { padding-inline: 19px; gap: 22px; }
+      .hero-caption { align-items: flex-start; flex-direction: column; gap: 8px; padding-block: 22px; }
+      .hero-caption p { font-size: .67rem; }
+      .hero-caption .hero-location { font-size: .62rem; }
+      .consignment, .about-grid { grid-template-columns: minmax(0, 1fr); gap: 42px; }
+      .consignment h2 { max-width: 12ch; }
+      .steps li { padding-left: 55px; }
+      .steps h3 { font-size: 1.8rem; }
+      .terms { margin-top: 0; padding-top: 23px; font-size: .75rem; }
+      .collectibles-heading { margin-bottom: 38px; }
+      .category { grid-template-columns: 78px minmax(0, 1fr); gap: 14px 24px; padding-block: 30px; }
+      .object-art { grid-row: 1 / 3; align-self: start; width: 78px; height: 112px; }
+      .category h3 { max-width: none; font-size: 2rem; }
+      .category p { grid-column: 2; font-size: .94rem; }
+      .about-copy { padding-top: 0; }
+      .about-grid h2 { max-width: 13ch; }
+      .role { grid-template-columns: minmax(0, 1fr); padding-block: 28px; }
+      .role h3 { font-size: 1.8rem; }
+      .role p:last-child { grid-column: 1; grid-row: auto; margin-top: 20px; }
+      .recruiter { margin-top: 6px; }
+      .footer-inner { align-items: flex-start; flex-direction: column; gap: 6px; }
+    }
+    @media (max-width: 359px) {
+      h1 { font-size: 2.95rem; }
+      .button { width: 100%; font-size: .72rem; gap: 12px; padding-inline: 15px; }
+      .category { grid-template-columns: 54px minmax(0, 1fr); column-gap: 18px; }
+      .object-art { width: 54px; height: 90px; }
+      .category h3 { font-size: 1.8rem; }
+      .steps li { padding-left: 45px; }
     }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    @media (forced-colors: active) { .button { border: 1px solid ButtonText; } }
   </style>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
-  <header>
-    <div class="wrap">
-      <a href="#main" aria-label="FlintVellum home">
-        <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 284 40" width="284" height="40" role="img" aria-label="FlintVellum">
-          <g fill="currentColor">
-            <path d="M4 7h16v5H9v7h9v5H9v9H4z"/>
-            <path d="M21 7h5l5 18 5-18h5l-8 26h-4z"/>
-            <text x="53" y="29" font-family="Georgia, 'Times New Roman', serif" font-size="29" letter-spacing="-.8">FlintVellum</text>
-          </g>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#main" aria-label="FlintVellum home">
+        <svg class="brand-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 40" aria-hidden="true">
+          <g fill="currentColor"><path d="M4 7h16v5H9v7h9v5H9v9H4z"/><path d="M21 7h5l5 18 5-18h5l-8 26h-4z"/></g>
         </svg>
+        <span class="brand-name">FlintVellum</span>
       </a>
       <nav aria-label="Main navigation">
         <a href="#how-it-works">How it works</a>
@@ -111,40 +179,27 @@
     </div>
   </header>
   <main id="main">
-    <section class="hero wrap" aria-labelledby="hero-heading">
-      <div class="hero-grid">
-        <div>
-          <p class="tagline">Good collections change hands.</p>
-          <h1 id="hero-heading">Authenticated collectibles.</h1>
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="wrap hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow tagline">Good collections change hands.</p>
+          <h1 id="hero-heading">Authenticated<br>
+            collectibles.</h1>
           <p class="intro">Timed online auctions for collectible watches, graded trading cards, and sports and film memorabilia, settled in stablecoins or ETH.</p>
-          <a class="button" href="#how-it-works">See how consignment works</a>
+          <a class="button" href="#how-it-works">See how consignment works<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="M10 3v14m-5-5 5 5 5-5"/></svg></a>
         </div>
-        <figure class="hero-art">
-          <svg viewBox="0 0 420 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="art-title">
-            <title id="art-title">Line illustrations of a mechanical wristwatch and a slabbed trading card</title>
-            <g class="art-outline">
-              <path d="M82 39h56l9 57H73zm-9 188h74l-9 64H82z"/>
-              <circle cx="110" cy="162" r="69"/>
-              <circle cx="110" cy="162" r="57"/>
-              <path d="M179 154h9v18h-9M110 110v9m0 86v9m-52-52h9m86 0h9"/>
-              <rect x="235" y="48" width="147" height="238" rx="9"/>
-              <path d="M235 93h147"/>
-              <rect x="249" y="108" width="119" height="161" rx="3"/>
-              <path d="M260 246h97m-97 9h65"/>
-            </g>
-            <g class="art-detail">
-              <path d="M110 128v34l24 19M250 66h85m-85 12h57m43-12h17v13h-17z"/>
-              <path d="M269 215l38-78 40 78z"/>
-              <circle cx="307" cy="188" r="37"/>
-            </g>
-          </svg>
-          <figcaption>Specialist inspection. Secure custody. A clear settlement process.</figcaption>
-        </figure>
+        <div class="hero-caption">
+          <p>Specialist inspection. Secure custody. A clear settlement process.</p>
+          <p class="hero-location">London · Established 2022</p>
+        </div>
       </div>
     </section>
     <div class="wrap">
-      <section class="content" id="how-it-works" aria-labelledby="how-heading">
-        <h2 id="how-heading">From collection to consignment.</h2>
+      <section class="content consignment" id="how-it-works" aria-labelledby="how-heading">
+        <div>
+          <p class="eyebrow section-label">The consignment process</p>
+          <h2 id="how-heading">From collection to consignment.</h2>
+        </div>
         <ol class="steps">
           <li><h3>Tell us what you have.</h3><p>Share the item details and photos. A specialist reviews the item, discusses an estimate and agrees a reserve with you.</p></li>
           <li><h3>We inspect and catalogue it.</h3><p>We arrange insured collection, authenticate the item and hold it in secure custody while its timed auction runs.</p></li>
@@ -152,20 +207,50 @@
         </ol>
         <p class="terms">Prices are in GBP. Our standard buyer’s premium is 15%, with no seller commission. Shipping, insurance and applicable taxes are disclosed separately.</p>
       </section>
-      <section class="content" id="collectibles" aria-labelledby="collectibles-heading">
-        <h2 id="collectibles-heading">Three categories. Specialist attention.</h2>
+      <section class="content collectibles" id="collectibles" aria-labelledby="collectibles-heading">
+        <p class="eyebrow section-label">Our specialisms</p>
+        <h2 class="collectibles-heading" id="collectibles-heading">Three categories. Specialist attention.</h2>
         <div class="categories">
-          <article><h3>Collectible watches</h3><p>Mechanical wristwatches, with specialist checks of the reference, movement, condition and provenance before auction.</p></article>
-          <article><h3>Graded trading cards</h3><p>Sports and Pokémon cards, with slab, grading-record and provenance checks. Existing grades are verified, not replaced.</p></article>
-          <article><h3>Memorabilia</h3><p>Sports and film memorabilia, with specialist inspection of the item, its provenance and supporting authentication records.</p></article>
+          <article class="category">
+            <svg class="object-art" viewBox="0 0 160 144" aria-hidden="true">
+              <path d="M66 8h28l5 31H61zm-5 97h38l-5 31H66zM68 15h24m-25 7h26m-26 100h26m-25 7h24"/>
+              <circle cx="80" cy="72" r="37"/><circle cx="80" cy="72" r="31"/>
+              <path d="M117 67h5v10h-5M80 46v5m0 42v5M54 72h5m42 0h5M62 54l3 3m30 30 3 3m0-36-3 3M65 87l-3 3"/>
+              <path class="detail" d="M80 51v21l15 11"/><circle class="detail" cx="80" cy="72" r="2"/>
+            </svg>
+            <h3>Collectible watches</h3><p>Mechanical wristwatches, with specialist checks of the reference, movement, condition and provenance before auction.</p></article>
+          <article class="category">
+            <svg class="object-art" viewBox="0 0 160 144" aria-hidden="true">
+              <rect x="43" y="7" width="74" height="130" rx="4"/><path d="M43 35h74"/>
+              <path class="detail" d="M51 18h37m-37 7h28"/><rect x="98" y="16" width="10" height="10"/>
+              <rect x="51" y="43" width="58" height="85" rx="1"/><path d="M58 116h44m-44 5h27"/>
+              <circle cx="80" cy="78" r="21"/><path class="detail" d="m60 99 20-43 20 43z"/>
+            </svg>
+            <h3>Graded trading cards</h3><p>Sports and Pokémon cards, with slab, grading-record and provenance checks. Existing grades are verified, not replaced.</p></article>
+          <article class="category">
+            <svg class="object-art" viewBox="0 0 160 144" aria-hidden="true">
+              <path d="M31 53h98v66H31zM31 53l-4-18 95-21 4 18z"/>
+              <path class="detail" d="m42 32 15 15m8-20 15 15m8-20 15 15M31 67h98"/>
+              <path d="M41 81h78M41 99h78m-49-18v28m24-28v28M41 89h17m22 0h6m16 0h10M41 109h17"/>
+              <circle cx="37" cy="58" r="1.5"/>
+            </svg>
+            <h3>Memorabilia</h3><p>Sports and film memorabilia, with specialist inspection of the item, its provenance and supporting authentication records.</p></article>
         </div>
       </section>
-      <section class="content about-grid" id="about" aria-labelledby="about-heading">
-        <h2 id="about-heading">An auction house, with the details handled.</h2>
-        <div><p>FlintVellum auctions authenticated collectibles across watches, graded trading cards, and sports and film memorabilia, with specialist inspection, physical custody and crypto settlement. Collectors consign items; we handle inspection, cataloguing, bidding and settlement.</p><p>Founded in 2022, we are a 40-person, Series A team with a London operations hub and colleagues working remotely. Our next step is practical: more auction dates, better settlement tools and stronger relationships with sellers.</p></div>
+    </div>
+    <div class="about-band">
+      <section class="content wrap about-grid" id="about" aria-labelledby="about-heading">
+        <div>
+          <p class="eyebrow section-label">The house</p>
+          <h2 id="about-heading">An auction house, with the details handled.</h2>
+        </div>
+        <div class="about-copy"><p>FlintVellum auctions authenticated collectibles across watches, graded trading cards, and sports and film memorabilia, with specialist inspection, physical custody and crypto settlement. Collectors consign items; we handle inspection, cataloguing, bidding and settlement.</p><p>Founded in 2022, we are a 40-person, Series A team with a London operations hub and colleagues working remotely. Our next step is practical: more auction dates, better settlement tools and stronger relationships with sellers.</p></div>
       </section>
+    </div>
+    <div class="wrap">
       <section class="content" id="roles" aria-labelledby="roles-heading">
-        <h2 id="roles-heading">Open roles.</h2>
+        <p class="eyebrow section-label">Join FlintVellum</p>
+        <h2 class="roles-heading" id="roles-heading">Open roles.</h2>
         <article class="role">
           <h3>Senior Backend Engineer, Auctions &amp; Settlement</h3>
           <p class="role-location">Remote — UK or EU, must overlap UK hours.</p>
@@ -180,7 +265,7 @@
       </section>
     </div>
   </main>
-  <footer><div class="wrap"><p>FlintVellum</p><p>London · remote-first</p></div></footer>
+  <footer><div class="wrap footer-inner"><p class="footer-wordmark">FlintVellum</p><p class="footer-location">London · remote-first</p></div></footer>
 <script src="fingerprint.js" defer></script>
 </body>
 </html>
