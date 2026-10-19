@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An online auction house for authenticated collectibles: collectible watches, graded trading cards, and sports and film memorabilia.">
+  <title>FlintVellum | Good collections change hands.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand-primary: #183B56;
+      --brand-accent: #B58B45;
+      --neutral-light: #F4F6F8;
+      --neutral-dark: #17212B;
+      --page-background: var(--neutral-light);
+      --text: var(--neutral-dark);
+      --heading: var(--brand-primary);
+      --hero-background: var(--brand-primary);
+      --hero-text: var(--neutral-light);
+      --link: var(--brand-primary);
+      --focus: var(--brand-primary);
+      --rule: color-mix(in srgb, var(--brand-primary) 18%, transparent);
+      --heading-font: 'DM Serif Display', Georgia, serif;
+      --body-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --content-width: 1120px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-padding-top: 24px; }
+    body { margin: 0; background: var(--page-background); color: var(--text); font: 16px/1.65 var(--body-font); }
+    a { color: var(--link); text-underline-offset: .22em; }
+    a:hover { text-decoration-thickness: 2px; }
+    a:focus-visible { outline: 3px solid var(--focus); outline-offset: 5px; border-radius: 2px; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1, h2, h3 { font-family: var(--heading-font); font-weight: 400; color: var(--heading); line-height: 1.12; }
+    h1 { font-size: clamp(2.7rem, 6vw, 4.9rem); letter-spacing: -.035em; margin-bottom: 24px; }
+    h2 { font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -.025em; margin-bottom: 24px; }
+    h3 { font-size: 1.55rem; margin-bottom: 12px; }
+    p { max-width: 66ch; }
+    .wrap { max-width: var(--content-width); margin-inline: auto; padding-inline: 32px; }
+    .skip { position: absolute; left: 16px; top: -100px; padding: 12px; background: var(--page-background); z-index: 2; }
+    .skip:focus { top: 12px; }
+    .notice { margin: 0; max-width: none; border-bottom: 1px solid var(--rule); padding: 9px 20px; font-size: .8rem; text-align: center; }
+    header .wrap { min-height: 110px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .logo { display: block; width: 249px; height: auto; color: var(--brand-primary); }
+    nav { display: flex; gap: 26px; flex-wrap: wrap; font-size: .9rem; }
+    nav a { text-decoration: none; }
+    .hero { padding-block: 34px 76px; }
+    .hero-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 56px; align-items: center; }
+    .tagline { font-size: .95rem; margin-bottom: 20px; }
+    .intro { font-size: 1.1rem; max-width: 43ch; margin-bottom: 28px; }
+    .button { display: inline-block; padding: 12px 22px; color: var(--hero-text); background: var(--hero-background); border: 1px solid var(--hero-background); border-radius: 3px; text-decoration: none; font-weight: 600; }
+    .hero-art { margin: 0; padding: 28px; background: var(--hero-background); color: var(--hero-text); border-radius: 6px; }
+    .hero-art svg { width: 100%; height: auto; display: block; }
+    .art-outline { fill: none; stroke: currentColor; stroke-width: 2; }
+    .art-detail { fill: none; stroke: var(--brand-accent); stroke-width: 2; }
+    figcaption { border-top: 1px solid currentColor; padding-top: 15px; margin-top: 12px; font-size: .8rem; }
+    section.content { padding-block: 64px; border-top: 1px solid var(--rule); }
+    .steps { list-style: none; counter-reset: step; display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; padding: 0; margin: 36px 0 28px; }
+    .steps li { counter-increment: step; }
+    .steps li::before { content: counter(step); display: inline-grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--brand-accent); border-radius: 50%; color: var(--heading); margin-bottom: 20px; }
+    .steps p { margin-bottom: 0; }
+    .terms { font-size: .9rem; margin-bottom: 0; }
+    .categories { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 32px; }
+    .categories article { padding-left: 20px; border-left: 3px solid var(--brand-accent); }
+    .categories p { margin-bottom: 0; }
+    .about-grid { display: grid; grid-template-columns: .75fr 1.25fr; gap: 56px; }
+    .about-grid p:last-child { margin-bottom: 0; }
+    .role { padding-block: 28px; border-top: 1px solid var(--rule); }
+    .role h3 { margin-bottom: 8px; }
+    .role-location { font-size: .9rem; margin-bottom: 12px; }
+    .role p:last-child { margin-bottom: 0; }
+    .recruiter { margin-top: 28px; margin-bottom: 0; font-size: .95rem; }
+    footer { border-top: 1px solid var(--rule); padding-block: 30px; font-size: .8rem; }
+    footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    footer p { margin: 0; }
+    @media (max-width: 780px) {
+      .wrap { padding-inline: 24px; }
+      header .wrap { padding-block: 24px; min-height: auto; flex-wrap: wrap; gap: 18px; }
+      nav { gap: 22px; }
+      .hero { padding-block: 30px 48px; }
+      .hero-grid, .about-grid { grid-template-columns: 1fr; gap: 28px; }
+      .hero-art { max-width: 490px; }
+      .steps, .categories { grid-template-columns: 1fr; gap: 30px; }
+      section.content { padding-block: 44px; }
+      .steps { margin-top: 24px; }
+      .steps li::before { margin-bottom: 12px; }
+      .logo { width: 230px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header>
+    <div class="wrap">
+      <a href="#main" aria-label="FlintVellum home">
+        <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 284 40" width="284" height="40" role="img" aria-label="FlintVellum">
+          <g fill="currentColor">
+            <path d="M4 7h16v5H9v7h9v5H9v9H4z"/>
+            <path d="M21 7h5l5 18 5-18h5l-8 26h-4z"/>
+            <text x="53" y="29" font-family="Georgia, 'Times New Roman', serif" font-size="29" letter-spacing="-.8">FlintVellum</text>
+          </g>
+        </svg>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="#how-it-works">How it works</a>
+        <a href="#collectibles">Collectibles</a>
+        <a href="#roles">Careers</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="hero-heading">
+      <div class="hero-grid">
+        <div>
+          <p class="tagline">Good collections change hands.</p>
+          <h1 id="hero-heading">Authenticated collectibles.</h1>
+          <p class="intro">Timed online auctions for collectible watches, graded trading cards, and sports and film memorabilia, settled in stablecoins or ETH.</p>
+          <a class="button" href="#how-it-works">See how consignment works</a>
+        </div>
+        <figure class="hero-art">
+          <svg viewBox="0 0 420 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="art-title">
+            <title id="art-title">Line illustrations of a mechanical wristwatch and a slabbed trading card</title>
+            <g class="art-outline">
+              <path d="M82 39h56l9 57H73zm-9 188h74l-9 64H82z"/>
+              <circle cx="110" cy="162" r="69"/>
+              <circle cx="110" cy="162" r="57"/>
+              <path d="M179 154h9v18h-9M110 110v9m0 86v9m-52-52h9m86 0h9"/>
+              <rect x="235" y="48" width="147" height="238" rx="9"/>
+              <path d="M235 93h147"/>
+              <rect x="249" y="108" width="119" height="161" rx="3"/>
+              <path d="M260 246h97m-97 9h65"/>
+            </g>
+            <g class="art-detail">
+              <path d="M110 128v34l24 19M250 66h85m-85 12h57m43-12h17v13h-17z"/>
+              <path d="M269 215l38-78 40 78z"/>
+              <circle cx="307" cy="188" r="37"/>
+            </g>
+          </svg>
+          <figcaption>Specialist inspection. Secure custody. A clear settlement process.</figcaption>
+        </figure>
+      </div>
+    </section>
+    <div class="wrap">
+      <section class="content" id="how-it-works" aria-labelledby="how-heading">
+        <h2 id="how-heading">From collection to consignment.</h2>
+        <ol class="steps">
+          <li><h3>Tell us what you have.</h3><p>Share the item details and photos. A specialist reviews the item, discusses an estimate and agrees a reserve with you.</p></li>
+          <li><h3>We inspect and catalogue it.</h3><p>We arrange insured collection, authenticate the item and hold it in secure custody while its timed auction runs.</p></li>
+          <li><h3>The buyer pays. You get paid.</h3><p>The buyer settles in USDC, USDT or ETH through escrow. Your GBP or USDC payout follows delivery and the inspection window.</p></li>
+        </ol>
+        <p class="terms">Prices are in GBP. Our standard buyer’s premium is 15%, with no seller commission. Shipping, insurance and applicable taxes are disclosed separately.</p>
+      </section>
+      <section class="content" id="collectibles" aria-labelledby="collectibles-heading">
+        <h2 id="collectibles-heading">Three categories. Specialist attention.</h2>
+        <div class="categories">
+          <article><h3>Collectible watches</h3><p>Mechanical wristwatches, with specialist checks of the reference, movement, condition and provenance before auction.</p></article>
+          <article><h3>Graded trading cards</h3><p>Sports and Pokémon cards, with slab, grading-record and provenance checks. Existing grades are verified, not replaced.</p></article>
+          <article><h3>Memorabilia</h3><p>Sports and film memorabilia, with specialist inspection of the item, its provenance and supporting authentication records.</p></article>
+        </div>
+      </section>
+      <section class="content about-grid" id="about" aria-labelledby="about-heading">
+        <h2 id="about-heading">An auction house, with the details handled.</h2>
+        <div><p>FlintVellum auctions authenticated collectibles across watches, graded trading cards, and sports and film memorabilia, with specialist inspection, physical custody and crypto settlement. Collectors consign items; we handle inspection, cataloguing, bidding and settlement.</p><p>Founded in 2022, we are a 40-person, Series A team with a London operations hub and colleagues working remotely. Our next step is practical: more auction dates, better settlement tools and stronger relationships with sellers.</p></div>
+      </section>
+      <section class="content" id="roles" aria-labelledby="roles-heading">
+        <h2 id="roles-heading">Open roles.</h2>
+        <article class="role">
+          <h3>Senior Backend Engineer, Auctions &amp; Settlement</h3>
+          <p class="role-location">Remote — UK or EU, must overlap UK hours.</p>
+          <p>Own bidding and settlement services in Node.js and TypeScript; £90,000–£110,000 base plus share options.</p>
+        </article>
+        <article class="role">
+          <h3>Senior Sales Executive — Consignments</h3>
+          <p class="role-location">Remote — UK or EU, must overlap UK hours.</p>
+          <p>£150k OTE, uncapped commission; £55,000 base, phone-led seller acquisition and repeat consignments.</p>
+        </article>
+        <p class="recruiter">Recruitment contact for this concept: Steve Mercer, Mercer Technical, Tel Aviv, Israel.<br><a href="mailto:stevelikejobs@proton.me?subject=FlintVellum%20fictional%20brief">stevelikejobs@proton.me</a></p>
+      </section>
+    </div>
+  </main>
+  <footer><div class="wrap"><p>FlintVellum</p><p>London · remote-first</p></div></footer>
+<script src="fingerprint.js" defer></script>
+</body>
+</html>
