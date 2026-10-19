@@ -71,25 +71,14 @@
     update();
   });
   all('chr-upcoming-auctions').forEach(section => {
-    const tiles = all('chr-auction-tile-next', section);
-    all('chr-quick-filters button', section).forEach(button => button.addEventListener('click', () => {
-      const filter = button.textContent.trim().toLowerCase();
-      if (filter.includes('near')) { showSearch('London'); return; }
-      all('chr-quick-filters button', section).forEach(b => { b.classList.toggle('chr-button--selected', b.textContent.trim() === button.textContent.trim()); b.setAttribute('aria-pressed', String(b.textContent.trim() === button.textContent.trim())); });
-      tiles.forEach(tile => { const item = tile.closest('.glide__slides > *') || tile.parentElement; item.hidden = filter !== 'all' && !tile.textContent.toLowerCase().includes(`${filter} auction`); });
+    all('[data-category-filter]', section).forEach(button => button.addEventListener('click', () => {
+      const filter = button.dataset.categoryFilter;
+      all('[data-category-filter]',section).forEach(b=>{const active=b===button;b.classList.toggle('chr-button--selected',active);b.setAttribute('aria-pressed',String(active));});
+      const items=all('[data-auction-category]',section);
+      items.forEach(item=>item.hidden=filter!=='all'&&item.dataset.auctionCategory!==filter);
+      const status=section.querySelector('[role="status"]');if(status)status.textContent=`${items.filter(i=>!i.hidden).length} sales`;
+      section.querySelector('chr-carousel')?.dispatchEvent(new Event('fv:filtered'));
     }));
-  });
-  all('chr-button-save-lot button').forEach((button, i) => {
-    const key = `flintvellum-follow-${i}`;
-    const render = followed => {
-      const label = button.querySelector('.chr-button__text');
-      if (label) label.textContent = followed ? 'Following' : 'Follow';
-      button.setAttribute('aria-pressed', String(followed));
-    };
-    let followed = false;
-    try { followed = localStorage.getItem(key) === 'true'; } catch {}
-    render(followed);
-    button.addEventListener('click', () => { followed = !followed; render(followed); try { localStorage.setItem(key, String(followed)); } catch {} });
   });
   const dialog = document.createElement('dialog');
   dialog.className = 'fv-dialog';
@@ -106,23 +95,11 @@
     if (!dialog.open) dialog.showModal();
     return body;
   };
-  const catalogue = all('main a[href]').map(a => ({text:a.textContent.trim(),href:a.href})).filter(a => a.text.length > 15 && !/view all|discover now/i.test(a.text));
   function showSearch(query = '') {
-    const body = openDialog('Search the collection');
-    const form = document.createElement('form'); form.className = 'fv-search-form';
-    form.innerHTML = '<input type="search" aria-label="Search by keyword" placeholder="Search by keyword"><button type="submit">Search</button>';
-    const results = document.createElement('ul'); results.className = 'fv-search-results';
-    body.append(form, results); form.querySelector('input').value = query;
-    const search = () => {
-      results.replaceChildren(); const value = form.querySelector('input').value.toLowerCase().trim();
-      const seen = new Set();
-      const matches = catalogue.filter(item => value && item.text.toLowerCase().includes(value) && !seen.has(item.href) && seen.add(item.href));
-      for (const item of matches) { const li = document.createElement('li'); const a = document.createElement('a'); a.href = item.href; a.textContent = item.text; li.append(a); results.append(li); }
-      if (value && !matches.length) results.textContent = 'No matching items. Try an artist, collection or category.';
-    };
-    form.addEventListener('submit', e => { e.preventDefault(); search(); });
-    form.querySelector('input').addEventListener('input', search); search();
-    form.querySelector('input').focus();
+    const body = openDialog('Search the archive');
+    const form = document.createElement('form');form.className='fv-search-form';form.action='catalogue.html';form.method='get';
+    form.innerHTML='<input name="q" type="search" aria-label="Search by keyword" placeholder="Maker, object, player or reference"><button type="submit">Search</button>';
+    form.querySelector('input').value=query;body.append(form);form.querySelector('input').focus();
   }
   const header = document.querySelector('#headerHost')?.shadowRoot;
   if (header) {
@@ -158,11 +135,11 @@
     all('button', header).forEach(button => {
       const label = `${button.textContent} ${button.getAttribute('aria-label') || ''}`.trim().toLowerCase();
       if (label.includes('skip to main')) button.addEventListener('click', () => { const main = document.querySelector('main'); main.tabIndex = -1; main.focus(); main.scrollIntoView(); });
-      if (label.includes('search')) button.addEventListener('click', e => { e.preventDefault(); showSearch(header.querySelector('input[type="search"]')?.value || ''); });
-      if (label === 'sign in' || label.includes('user navigation')) button.addEventListener('click', () => openDialog('Account access','Auction accounts and bidding are managed by the source auction house.','https://www.christies.com/','Visit Christie’s'));
+      if (label.includes('search') && !button.closest('form')) button.addEventListener('click', e => { e.preventDefault(); showSearch(header.querySelector('input[type="search"]')?.value || ''); });
+
       if (button.hasAttribute('aria-controls') && button.getAttribute('aria-controls') === 'language-menu') button.addEventListener('click', () => { const panel = header.getElementById('language-menu').parentElement; const open = button.getAttribute('aria-expanded') !== 'true'; panel.style.cssText = open ? 'display:block;opacity:1;transform:none;pointer-events:auto' : ''; button.setAttribute('aria-expanded', String(open)); });
     });
-    all('form', header).forEach(form => form.addEventListener('submit', e => { e.preventDefault(); showSearch(form.querySelector('input').value); }));
+    all('form', header).forEach(form => form.addEventListener('submit', e => { e.preventDefault(); const target=new URL('catalogue.html',document.baseURI);target.searchParams.set('q',form.querySelector('input').value);location.href=target.href; }));
   }
   const footer = document.querySelector('#footerHost')?.shadowRoot;
   if (footer) {
@@ -179,8 +156,6 @@
     });
   }
   if (footer) all('button', footer).forEach(button => button.addEventListener('click', () => {
-    if (button.textContent.includes('Cookie')) openDialog('Privacy','This page uses FlintVellum’s existing analytics. Christie’s advertising and marketing scripts are not included.');
-    else if (button.getAttribute('aria-label') === 'WeChat') openDialog('WeChat','Visit the source auction house for its social channels.','https://www.christies.com/','Visit Christie’s');
+    if (button.textContent.includes('Privacy')) openDialog('Privacy','This site uses FlintVellum’s existing analytics. Saved lots are stored in this browser.');
   }));
-  all('main button').filter(button => button.textContent.trim().toLowerCase() === 'sign up').forEach(button => button.addEventListener('click', () => openDialog('Email updates','Newsletter subscriptions are managed by the source auction house.','https://www.christies.com/','Visit Christie’s')));
 })();

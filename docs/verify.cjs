@@ -1,82 +1,45 @@
 const {firefox}=require('playwright');
-const fs=require('node:fs');
-const http=require('node:http');
-const path=require('node:path');
-const assert=require('node:assert/strict');
+const fs=require('node:fs'),http=require('node:http'),path=require('node:path'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..');
-const types={'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.jpg':'image/jpeg','.png':'image/png','.woff':'font/woff','.woff2':'font/woff2','.mp4':'video/mp4'};
+const types={'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.jpg':'image/jpeg','.png':'image/png','.woff':'font/woff','.woff2':'font/woff2','.mp4':'video/mp4','.json':'application/json'};
 const server=http.createServer((req,res)=>{
- const name=decodeURIComponent(new URL(req.url,'http://localhost').pathname);
- let file=path.join(root,name);
- if(!file.startsWith(root+path.sep)&&file!==root){res.writeHead(403).end();return;}
- try{if(fs.statSync(file).isDirectory())file=path.join(file,'index.html');res.setHeader('Content-Type',types[path.extname(file)]||'application/octet-stream');res.end(fs.readFileSync(file));}catch{res.writeHead(404).end();}
+ const name=decodeURIComponent(new URL(req.url,'http://localhost').pathname).replace(/^\/flintvellum\//,'/');let file=path.join(root,name);
+ if(!file.startsWith(root+path.sep)&&file!==root){res.writeHead(403).end();return}
+ try{if(fs.statSync(file).isDirectory())file=path.join(file,'index.html');res.setHeader('Content-Type',types[path.extname(file)]||'application/octet-stream');res.end(fs.readFileSync(file))}catch{res.writeHead(404).end()}
 });
 (async()=>{
- await new Promise(r=>server.listen(0,'127.0.0.1',r));
- const browser=await firefox.launch({headless:true});
+ await new Promise(r=>server.listen(0,'127.0.0.1',r));const browser=await firefox.launch({headless:true});
  try{
- const page=await browser.newPage();const errors=[],failed=[],remote=[];
- page.on('pageerror',e=>errors.push(e.message));
- page.on('requestfailed',r=>failed.push({url:r.url(),error:r.failure()?.errorText}));
- page.on('request',r=>{if(!r.url().startsWith('http://127.0.0.1')&&!r.url().startsWith('data:'))remote.push(r.url())});
+ const page=await browser.newPage(),errors=[],failed=[],badResponses=[],layouts=[];
+ page.on('pageerror',e=>errors.push(e.message));page.on('requestfailed',r=>{if(!r.failure()?.errorText.includes('ABORTED'))failed.push({url:r.url(),error:r.failure()?.errorText})});page.on('response',r=>{if(r.status()>=400)badResponses.push({url:r.url(),status:r.status()})});
  await page.route('**/fingerprint.js',r=>r.fulfill({contentType:'text/javascript',body:''}));
- const base=`http://127.0.0.1:${server.address().port}/`;
- await page.setViewportSize({width:1440,height:1000});
- await page.goto(base,{waitUntil:'networkidle'});await page.evaluate(()=>document.fonts.ready);
+ const base=`http://127.0.0.1:${server.address().port}/flintvellum/`;
  fs.mkdirSync(path.join(root,'docs/verify-shots'),{recursive:true});
- const layouts=[];
- for(const width of [1440,390,320,768,1024]){
-  await page.setViewportSize({width,height:1000});await page.waitForTimeout(150);
-  layouts.push(await page.evaluate(()=>({width:innerWidth,docWidth:document.documentElement.scrollWidth,heading:document.querySelector('h1')?.textContent,header:!!document.querySelector('#headerHost').shadowRoot,brokenImages:[...document.images].filter(i=>!i.complete||!i.naturalWidth).map(i=>i.src),fonts:[...document.fonts].filter(f=>f.status==='loaded').map(f=>f.family)})));
-  if([1440,390].includes(width))await page.screenshot({path:path.join(root,`docs/verify-shots/${width}.png`),fullPage:true});
- }
- for(const result of layouts){assert.equal(result.docWidth,result.width,'Narrow-screen overflow');assert.deepEqual(result.brokenImages,[],'Broken local image');}
- await page.setViewportSize({width:1440,height:1000});
- const hero=page.locator('chr-header-carousel');
- await hero.hover();
- const before=await hero.locator('.glide__slides').evaluate(e=>e.style.transform);
- await hero.getByRole('button',{name:'Next Slide',exact:true}).click();
- assert.notEqual(await hero.locator('.glide__slides').evaluate(e=>e.style.transform),before);
- await hero.getByRole('button',{name:'Show slide 1',exact:true}).click();
- const desktop=page.locator('chr-upcoming-auctions.fv-upcoming-desktop');
- await desktop.getByRole('button',{name:'Online',exact:true}).click();
- assert.equal(await desktop.locator('chr-auction-tile-next:visible').count(),2);
- await desktop.getByRole('button',{name:'All',exact:true}).click();
- const follow=page.locator('chr-button-save-lot button').first();
- await follow.click();assert.equal(await follow.getAttribute('aria-pressed'),'true');
- const header=page.locator('#headerHost');
- await header.locator('input[type="search"]').fill('Monet');
- await header.locator('input[type="search"]').press('Enter');
- assert.ok(await page.locator('.fv-search-results a').count()>0);
- await page.getByRole('button',{name:'Close',exact:true}).click();
- const auctions=header.locator('nav[aria-label="Primary"] a[aria-controls]').first();
- await auctions.hover();assert.equal(await auctions.getAttribute('aria-expanded'),'true');
- await page.keyboard.press('Escape');
- await page.setViewportSize({width:390,height:844});
- const menu=header.getByRole('button',{name:'Menu',exact:true});
- await menu.click();assert.equal(await menu.getAttribute('aria-expanded'),'true');
- assert.ok(await header.locator('.fv-drawer-open details').count()>0);
- await menu.click();
- const mobile=page.locator('chr-upcoming-auctions.fv-upcoming-mobile');
- assert.ok(await mobile.locator('.glide__slides').count()>0);
- await mobile.getByRole('button',{name:'Online',exact:true}).click();
- await mobile.getByRole('button',{name:'All',exact:true}).click();
- const footer=page.locator('#footerHost');
- await footer.getByRole('button',{name:/^help$/i}).click();
- assert.equal(await footer.getByRole('button',{name:/^help$/i}).getAttribute('aria-expanded'),'true');
- await page.goto(base+'company.html',{waitUntil:'networkidle'});
- const company=[];
- for(const width of [320,390,1440]){
-   await page.setViewportSize({width,height:900});
-   const layout=await page.evaluate(()=>({width:innerWidth,docWidth:document.documentElement.scrollWidth,roles:document.querySelectorAll('.role').length,mailto:document.querySelector('.recruiter a').getAttribute('href'),analytics:document.querySelectorAll('script[src="fingerprint.js"]').length}));
-   assert.equal(layout.width,layout.docWidth);assert.equal(layout.roles,2);assert.equal(layout.analytics,1);
-   company.push(layout);
-   if(width===1440)await page.screenshot({path:path.join(root,'docs/verify-shots/company.png'),fullPage:true});
- }
- const home=page.locator('#headerHost').getByRole('link',{name:'FlintVellum home'});
- await home.click();await page.waitForURL(base);
- assert.deepEqual(errors,[],'Browser errors');assert.deepEqual(failed,[],'Failed requests');
- console.log(JSON.stringify({layouts,errors,failed,remote,company,interactions:'passed'},null,2));
- fs.writeFileSync(path.join(root,'docs/verify-shots/results.json'),JSON.stringify({layouts,errors,failed,remote},null,2));
+ const go=async name=>{await page.goto(base+name,{waitUntil:'networkidle'});await page.evaluate(()=>document.fonts.ready)};
+ async function layout(name,width){await page.setViewportSize({width,height:960});await page.waitForTimeout(150);const result=await page.evaluate(()=>({width:innerWidth,docWidth:document.documentElement.scrollWidth,broken:[...document.images].filter(i=>i.complete&&!i.naturalWidth).map(i=>i.src)}));layouts.push({page:name,...result});assert.equal(result.docWidth,width,`Overflow ${name} ${width}`);assert.deepEqual(result.broken,[],`Broken images ${name}`)}
+ await go('');await page.locator('img[loading=lazy]').evaluateAll(es=>es.forEach(e=>e.loading='eager'));await page.waitForLoadState('networkidle');
+ for(const width of [1440,390,320,768,1024]){await layout('home',width);if([1440,390].includes(width))await page.screenshot({path:path.join(root,`docs/verify-shots/${width}.png`),fullPage:true})}
+ await page.setViewportSize({width:1440,height:1000});const hero=page.locator('chr-header-carousel');await hero.hover();const before=await hero.locator('.glide__slides').evaluate(e=>e.style.transform);await hero.getByRole('button',{name:'Next Slide',exact:true}).click();assert.notEqual(await hero.locator('.glide__slides').evaluate(e=>e.style.transform),before);await hero.getByRole('button',{name:'Show slide 1',exact:true}).click();
+ const desktop=page.locator('chr-upcoming-auctions.fv-upcoming-desktop');await desktop.getByRole('button',{name:'Trading cards',exact:true}).click();assert.equal(await desktop.locator('chr-auction-tile-next:visible').count(),2);await desktop.getByRole('button',{name:'All',exact:true}).click();assert.equal(await desktop.locator('chr-auction-tile-next:visible').count(),6);
+ const header=page.locator('#headerHost');const archive=header.locator('nav[aria-label="Primary"] a[aria-controls]').first();await archive.hover();assert.equal(await archive.getAttribute('aria-expanded'),'true');await page.keyboard.press('Escape');
+ await header.locator('input[type="search"]').fill('Berneron');await header.locator('input[type="search"]').press('Enter');await page.waitForURL('**/catalogue.html?q=Berneron');assert.equal(await page.locator('.fv-result:visible').count(),1);
+ await page.locator('.fv-result:visible [data-save-lot]').click();assert.equal(await page.locator('.fv-result:visible [data-save-lot]').getAttribute('aria-pressed'),'true');await go('catalogue.html?saved=1');assert.equal(await page.locator('.fv-result:visible').count(),1);
+ await page.locator('.fv-result:visible .chr-lot-tile__link').click();await page.waitForURL('**/lots/w-0001.html');assert.match(await page.locator('h1').textContent(),/Berneron/);assert.equal(await page.locator('.fv-lot-summary [data-save-lot]').getAttribute('aria-pressed'),'true');
+ const thumbs=page.locator('[data-gallery-index]');await thumbs.nth(1).click();assert.match(await page.locator('#lot-image').getAttribute('src'),/02.jpg/);await page.locator('.fv-gallery-main').click();assert.equal(await page.locator('.fv-lightbox').evaluate(e=>e.open),true);await page.getByRole('button',{name:'Next image',exact:true}).click();assert.match(await page.locator('.fv-lightbox img').getAttribute('src'),/03.jpg/);await page.keyboard.press('Escape');assert.equal(await page.locator('.fv-lightbox').evaluate(e=>e.open),false);
+ for(const width of [1440,390,320,768,1024])await layout('lot',width);await page.setViewportSize({width:1440,height:1000});await page.locator('img[loading=lazy]').evaluateAll(es=>es.forEach(e=>e.loading='eager'));await page.waitForLoadState('networkidle');await page.screenshot({path:path.join(root,'docs/verify-shots/lot.png'),fullPage:true});
+ await go('catalogue.html');assert.equal(await page.locator('.fv-result:visible').count(),24);await page.getByRole('button',{name:'Next',exact:true}).click();assert.match(page.url(),/page=2/);assert.equal(await page.locator('.fv-result:visible').count(),24);
+ await page.locator('a[data-category="cards"]').click();assert.match(await page.locator('#result-count').textContent(),/^100 lots/);await page.locator('select[name="maker"]').selectOption({label:'Topps (Bowman)'});assert.ok(await page.locator('.fv-result:visible').count()>0);await page.getByRole('button',{name:'Clear filters',exact:true}).click();await page.locator('input[name="result"]').check();assert.match(await page.locator('#result-count').textContent(),/^127 lots/);await page.locator('select[name="sort"]').selectOption('result-desc');const resultValues=await page.locator('.fv-result:visible').evaluateAll(es=>es.map(e=>Number(e.dataset.result)));assert.ok(resultValues.every((x,i)=>!i||x<=resultValues[i-1]));
+ await go('catalogue.html?category=memorabilia&subtype=film');assert.match(await page.locator('#result-count').textContent(),/^14 lots/);await go('catalogue.html?category=memorabilia&subtype=sports');assert.match(await page.locator('#result-count').textContent(),/^36 lots/);
+ await go('catalogue.html?q=zzzznonexistent');assert.equal(await page.locator('.fv-empty').isVisible(),true);await page.locator('[data-clear-filters]').click();assert.equal(await page.locator('.fv-result:visible').count(),24);
+ for(const width of [1440,390,320,768,1024]){await layout('catalogue',width);if([1440,390].includes(width))await page.screenshot({path:path.join(root,`docs/verify-shots/catalogue-${width}.png`),fullPage:true})}
+ await page.setViewportSize({width:390,height:844});const menu=header.getByRole('button',{name:'Menu',exact:true});await menu.click();assert.equal(await menu.getAttribute('aria-expanded'),'true');const detail=header.locator('.fv-drawer-open details').first();await detail.locator('summary').click();await detail.getByRole('link',{name:'Watches',exact:true}).click();await page.waitForURL('**/catalogue.html?category=watches');assert.match(await page.locator('#result-count').textContent(),/^100 lots/);
+ const footer=page.locator('#footerHost');await footer.getByRole('button',{name:'Explore',exact:true}).click();assert.equal(await footer.getByRole('button',{name:'Explore',exact:true}).getAttribute('aria-expanded'),'true');
+ await go('');const mobile=page.locator('chr-upcoming-auctions.fv-upcoming-mobile');await mobile.getByRole('button',{name:'Memorabilia',exact:true}).click();assert.equal(await mobile.locator('chr-auction-tile-next:visible').count(),2);
+ for(const id of ['c-0022','m-0036','m-0038','m-0045','m-0047','w-0021']){await go('lots/'+id+'.html');await layout(id,320);await page.locator('.fv-source-notes summary').click();assert.equal(await page.locator('.fv-source-notes').getAttribute('open'),'');if(id==='c-0022')assert.match(await page.locator('.fv-source-notes').textContent(),/93033555/);if(id==='w-0021')assert.match(await page.locator('.fv-specs').textContent(),/Not established/)}
+ await go('company.html');for(const width of [320,390,1440])await layout('company',width);assert.equal(await page.locator('.role').count(),2);assert.equal(await page.locator('.recruiter a').getAttribute('href'),'mailto:stevelikejobs@proton.me?subject=FlintVellum%20role%20enquiry');
+ await go('archive.html');for(const width of [320,390,1440])await layout('archive',width);
+ await page.locator('#headerHost').getByRole('link',{name:'FlintVellum home',exact:true}).click();await page.waitForURL(base);
+ assert.deepEqual(errors,[],'Browser errors');assert.deepEqual(failed,[],'Failed requests');assert.deepEqual(badResponses,[],'HTTP failures');
+ const report={layouts,errors,failed,badResponses,interactions:'passed'};fs.writeFileSync(path.join(root,'docs/verify-shots/results.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
  }finally{await browser.close();server.close()}
 })().catch(e=>{console.error(e);server.close();process.exitCode=1});
