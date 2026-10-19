@@ -3,5 +3,9 @@
   "settlementStep": "The buyer settles in Bitcoin, Ethereum, USDC or USDT through escrow, with other major assets considered on request. Your GBP or USDC payout follows delivery and the inspection window.",
   "homeHeroSubtitle": "Settlement in Bitcoin, Ethereum, USDC or USDT, with other major assets considered on request.",
   "companyHeroSubtitle": "Timed online auctions for collectible watches, graded trading cards, and sports and film memorabilia, settled in Bitcoin, Ethereum, USDC or USDT, with other major assets considered on request.",
-  "roleLocation": "Remote. UK or EU preferred; international candidates welcome. Must overlap UK hours."
+  "roleLocation": "Remote. UK or EU preferred; international candidates welcome. Must overlap UK hours.",
+  "contactLine": "Recruitment contact: Steve Mercer, Mercer Technical, London, United Kingdom.",
+  "contactEmail": "stevemercer1@proton.me",
+  "contactMailto": "mailto:stevemercer1@proton.me?subject=FlintVellum%20role%20enquiry",
+  "backendSalary": "Own bidding and settlement services in Node.js and TypeScript; £90,000–£170,000 base plus share options."
 }

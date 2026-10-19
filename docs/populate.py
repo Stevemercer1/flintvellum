@@ -184,13 +184,19 @@ for a in s.main.select('a[href]'):
     if a['href'].startswith('https://'):a['href']='catalogue.html'
 
 # Keep the approved consignment policy visible on the homepage as well as the company page.
+founder_section=copy.deepcopy(company.select_one('#about'))
+founder_section['class']=['chr-section','fv-founder']
+founder_container=s.new_tag('div',attrs={'class':'container-fluid fv-founder-grid'})
+for node in list(founder_section.contents):founder_container.append(node.extract())
+founder_section.append(founder_container)
+more.insert_before(founder_section)
 process=copy.deepcopy(company.select_one('#how-it-works'))
 process['class']=['chr-section','fv-home-process']
 container=s.new_tag('div',attrs={'class':'container-fluid'})
 for node in list(process.contents):container.append(node.extract())
 process.append(container)
 more.insert_before(process)
-careers_callout=fragment('<section id="careers" class="chr-section fv-home-careers"><div class="container-fluid"><div><p class="chr-label">CAREERS</p><h2 class="chr-heading-l-serif">The work behind the house.</h2><p>Explore draft role outlines in auctions, settlement and consignments.</p></div><a class="chr-button chr-button--secondary chr-button--lg chr-button--light" href="careers/"><span class="chr-button__text">Explore the roles</span></a></div></section>')
+careers_callout=fragment('<section id="careers" class="chr-section fv-home-careers"><div class="container-fluid"><div><p class="chr-label">CAREERS</p><h2 class="chr-heading-l-serif">The work behind the house.</h2><p>Explore draft roles in crypto settlement and consignments. Backend engineering: £90,000–£170,000 plus share options, with practical crypto knowledge and AI-tool fluency.</p></div><a class="chr-button chr-button--secondary chr-button--lg chr-button--light" href="careers/"><span class="chr-button__text">Explore the roles</span></a></div></section>')
 more.insert_before(careers_callout)
 
 shell=copy.deepcopy(s);shell.main.clear();shell.main.attrs.pop('class',None)
@@ -219,6 +225,8 @@ def write(page,path):
             anchor['href']='careers/'
         elif anchor['href']=='company.html#how-it-works':
             anchor['href']='index.html#how-it-works'
+        elif anchor['href']=='company.html#about':
+            anchor['href']='index.html#about'
     for e in page.select('[id^="chr-img__"]'):del e['id']
     out=str(page).replace('viewbox=','viewBox=').replace('textlength=','textLength=').replace('lengthadjust=','lengthAdjust=')
     out=out.replace('<script defer="" src="fingerprint.js"></script>','<script src="fingerprint.js" defer></script>\n')
@@ -237,10 +245,14 @@ for role,key in zip(roles.select('.role'),['backend','sales']):
     responsibilities=''.join(f'<li>{E(item)}</li>' for item in detail['responsibilities'])
     requirements=''.join(f'<li>{E(item)}</li>' for item in detail['requirements'])
     appendhtml(role,f'<div class="fv-role-details"><p class="fv-role-intro">{E(detail["intro"])}</p><div class="fv-role-columns"><section><h4>What you would do</h4><ul>{responsibilities}</ul></section><section><h4>What you would bring</h4><ul>{requirements}</ul></section></div><section><h4>{E(detail["contextHeading"])}</h4><p>{E(detail["context"])}</p></section><section><h4>Working arrangements</h4><p>{E(detail["arrangements"])}</p></section></div>')
+    if detail.get('hiringProcess'):
+        appendhtml(role.select_one('.fv-role-details'),'<section class="fv-hiring-process"><h4>The hiring process</h4>'+''.join(f'<p>{E(step)}</p>' for step in detail['hiringProcess'])+'</section>')
 careers.select_one('.fv-careers').append(roles)
 write(careers,'careers/index.html')
 company.select_one('#roles-heading').insert_after(fragment(f'<p class="fv-role-status">{E(role_details["status"])}</p>'))
 for role,key in zip(company.select('.role'),['backend','sales']):
+    if key=='backend':
+        appendhtml(role,'<div class="fv-role-preview"><p>Practical cryptocurrency experience is strongly preferred. Daily use of AI tools for coding, research and review is required. The first stage is a technical test, before a conversation with Steve Mercer, with a progression decision within one to two working days.</p></div>')
     role.append(fragment(f'<a class="fv-source-link" href="careers/#{role_details[key]["id"]}">Read the role outline →</a>'))
 
 intro='Objects with a past. Stories still unfolding.'

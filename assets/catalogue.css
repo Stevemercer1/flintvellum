@@ -219,3 +219,21 @@ chr-header-carousel-slide:first-child .chr-hero-banner__image img { object-fit:c
 .fv-enquiry-actions a { text-decoration:underline; text-underline-offset:4px; font-size:14px; }
 [data-enquiry-result] { margin-top:28px; }
 @media(max-width:380px) { .fv-form-row { grid-template-columns:minmax(0,1fr); } }
+/* A signed founder note, set in the house's existing editorial language. */
+.fv-founder-grid { display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:10%; align-items:start; }
+.fv-founder h2 { font:300 clamp(32px,3.5vw,50px)/1.12 ABCArizonaSerif,Georgia,serif; letter-spacing:-.025em; max-width:11ch; margin:20px 0 26px; }
+.fv-founder .section-label { font:400 12px/1.5 ABCArizonaSans,Arial,sans-serif; text-transform:uppercase; letter-spacing:.1em; }
+.fv-founder-line { font:300 14px/1.6 ABCArizonaSans,Arial,sans-serif; color:var(--fv-muted); }
+.fv-founder-copy { font:300 17px/1.8 ABCArizonaSans,Arial,sans-serif; max-width:65ch; }
+.fv-founder-copy p { margin:0 0 22px; }
+.fv-founder-copy p:last-child { margin:0; }
+.fv-founder.chr-section { padding-block:80px; background:var(--fv-soft); }
+.fv-founder-copy p:first-child { font:300 24px/1.5 ABCArizonaSerif,Georgia,serif; }
+.fv-hiring-process p { margin-bottom:18px; }
+@media(max-width:767px) {
+ .fv-founder-grid { grid-template-columns:minmax(0,1fr); gap:32px; }
+ .fv-founder.chr-section { padding-block:48px; }
+ .fv-founder h2 { max-width:15ch; margin:16px 0 20px; }
+ .fv-founder-copy { font-size:16px; line-height:1.75; }
+ .fv-founder-copy p:first-child { font-size:23px; }
+}

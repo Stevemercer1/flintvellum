@@ -37,3 +37,11 @@ Read the do-not-cross skill before committing or pushing. Main publishes GitHub 
 ## Homepage character and motion
 
 Keep the auction-house typography and editorial structure, with restrained scroll reveals, image movement and responsive carousel controls. Respect reduced-motion preferences and keep content readable without JavaScript. Homepage photographs must be varied; do not repeat image files across its sections. The rejected stock watch photograph is removed. Use the supplied watch archive for watch imagery.
+
+## Founder and current hiring copy
+
+The owner-supplied founder story is in docs/founder-copy.json, with ready-to-paste versions in docs/founder-about.md and the editable LinkedIn pack. The website About is 200–280 words; the short LinkedIn version is exactly 25 words. Render the same story and short founder line in index.html#about and company.html#about.
+
+Current contact: stevemercer1@proton.me. Contact location: London, United Kingdom. The backend role now pays £90,000–£170,000 base plus share options. Keep the sales package unchanged. The approved contact and salary strings live in docs/site-copy.json; these supersede the original snapshot.
+
+Backend candidates need working cryptocurrency knowledge; practical experience buying, holding or transferring it is strongly preferred and personal experience counts. AI-native working habits across coding, research, debugging and review are required. The first stage is a technical test before a conversation with Steve Mercer. Candidates receive a progression decision within one to two working days; the second stage is that conversation. No test requires purchasing crypto, wallet access, private keys, seed phrases or transfers. Keep docs/role-details.json, the website and docs/linkedin-role-pack.html consistent. The underlying hiring brief remains labelled as a draft.

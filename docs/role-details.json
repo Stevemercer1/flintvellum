@@ -1,24 +1,31 @@
 {
-  "source": "~/Desktop/FlintVellum/flintvellum-phase-2.md, Indeed postings for Role A and Role B; supported by PHASE-1.md",
+  "source": "~/Desktop/FlintVellum/flintvellum-phase-2.md, Indeed postings for Role A and Role B; supported by PHASE-1.md; backend salary, crypto/AI priorities and test-first process updated by the owner in this conversation.",
   "status": "These are draft role outlines from a fictional company and hiring brief, not verified live vacancies. The pay figures below describe the proposed packages.",
   "backend": {
     "id": "backend-engineer",
-    "intro": "Own the services that keep an auction running correctly, from the first bid to the final settlement. The work centres on reliable backend systems and clear records that help operations resolve payment and delivery exceptions.",
+    "intro": "Build the services that connect a collector’s final bid to a completed crypto settlement. You will own auction and payment logic, solve the cases that operations cannot afford to get wrong, and use AI tools as part of your daily engineering work.",
     "responsibilities": [
-      "Build and maintain bid validation, reserve handling, auction closing and settlement services.",
-      "Handle simultaneous bids, safe retries and duplicate payment events without losing or repeating a transaction.",
-      "Maintain the settlement ledger and work with operations on failed payments and payout reconciliation.",
-      "Take part in code reviews and turn operational problems into small, maintainable service changes."
+      "Own bid validation, reserve handling, auction closing and settlement services from design through production.",
+      "Build clear records for cryptocurrency payment events, confirmations, failed transfers and payout reconciliation.",
+      "Handle simultaneous bids, safe retries and duplicate events without losing or repeating a transaction.",
+      "Use AI coding assistants, research tools and review tools to investigate problems, build features and develop tests; check their output before it reaches production.",
+      "Work directly with operations to turn difficult settlement cases into reliable, maintainable services."
     ],
     "requirements": [
-      "Strong production experience with Node.js and TypeScript, typically five years or more in backend engineering.",
-      "Confidence with SQL, database transactions, concurrency and accurate money calculations.",
-      "Experience with background jobs, payment events and recovery from partial failures.",
-      "The ability to explain technical decisions clearly and work closely with operations colleagues."
+      "A working understanding of cryptocurrency is essential. Practical experience buying, holding or transferring crypto is strongly preferred; personal experience counts.",
+      "Understand wallets, addresses, networks, transaction fees, confirmations and the difference between Bitcoin, Ethereum and stablecoins. We value practical crypto knowledge more than an impressive list of frameworks.",
+      "Be AI-native in your working habits: use different AI tools for coding, research, debugging and review, and be able to explain where you verify or reject their output.",
+      "Be able to build, debug and maintain production backend services in Node.js and TypeScript, with sound SQL, transaction handling and accurate money calculations.",
+      "Explain your decisions clearly and take responsibility for the behaviour of the services you ship."
     ],
     "contextHeading": "The technical work",
-    "context": "The brief specifies Node.js, TypeScript, Fastify and PostgreSQL, with Redis and BullMQ for background work and WebSockets for bid updates. It also includes AWS, Vitest and GitHub Actions. Previous auction experience is not required; crypto experience is useful. The proposed role is a senior individual contributor reporting to the Head of Engineering.",
-    "arrangements": "Full-time and remote, with overlap during UK working hours. International candidates are welcome, with UK or EU candidates preferred. Country-specific employment arrangements and permission to work where you live would need to be confirmed before an offer. Share-option terms would be provided separately from salary."
+    "context": "The core stack is Node.js, TypeScript, Fastify and PostgreSQL, with Redis and BullMQ for background work and WebSockets for bid updates. The brief also includes AWS, Vitest and GitHub Actions. Practical crypto fluency and effective use of AI tools take priority over matching every item in the stack. This remains a senior individual contributor role reporting to the Head of Engineering.",
+    "arrangements": "£90,000–£170,000 annual base plus share options, with the offer reflecting relevant experience and scope. Full-time and remote. UK or EU candidates are preferred, international candidates are welcome, and overlap with UK working hours is required. Country-specific employment arrangements and any salary conversion would be confirmed before an offer. Share-option terms are separate from salary.",
+    "hiringProcess": [
+      "Stage one is a technical test, completed before any conversation with Steve Mercer. It covers backend reasoning, practical cryptocurrency knowledge and how you use AI tools while checking the result.",
+      "Within one to two working days of submission, candidates will be notified whether they are moving to stage two: a conversation with Steve Mercer.",
+      "The test uses a fictional scenario. Candidates do not need to buy cryptocurrency, connect a wallet, reveal private keys or seed phrases, or transfer funds."
+    ]
   },
   "sales": {
     "id": "sales-consignments",

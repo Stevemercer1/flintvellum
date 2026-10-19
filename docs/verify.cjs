@@ -95,9 +95,15 @@ const server=http.createServer((req,res)=>{
   for(const name of ['','company.html','careers/']){
    await go(name);
    for(const width of [320,390,768,1024,1440])await layout(name||'home',width);
+   if(name===''){
+    for(const width of [1440,390]){await page.setViewportSize({width,height:1000});await page.locator('#about').screenshot({path:path.join(root,`docs/verify-shots/founder-${width}.png`),animations:'disabled'})}
+    assert.match(await page.locator('#about').innerText(),/Stefan Mercer/);
+   }
    if(name==='careers/'){
     assert.equal(await page.locator('.role').count(),2);
-    assert.equal(await page.locator('.recruiter a').getAttribute('href'),'mailto:stevelikejobs@proton.me?subject=FlintVellum%20role%20enquiry');
+    assert.match(await page.locator('#backend-engineer').innerText(),/£90,000–£170,000/);
+    assert.match(await page.locator('.fv-hiring-process').innerText(),/one to two working days/);
+    assert.equal(await page.locator('.recruiter a').getAttribute('href'),'mailto:stevemercer1@proton.me?subject=FlintVellum%20role%20enquiry');
     await page.screenshot({path:path.join(root,'docs/verify-shots/careers-desktop.png'),fullPage:true,animations:'disabled'});
     await page.setViewportSize({width:390,height:844});
     await page.screenshot({path:path.join(root,'docs/verify-shots/careers-mobile.png'),fullPage:true,animations:'disabled'});
@@ -138,7 +144,7 @@ const server=http.createServer((req,res)=>{
  await page.setViewportSize({width:390,height:844});const menu=header.getByRole('button',{name:'Menu',exact:true});await menu.click();assert.equal(await menu.getAttribute('aria-expanded'),'true');const detail=header.locator('.fv-drawer-open details').first();await detail.locator('summary').click();await detail.getByRole('link',{name:'Watches',exact:true}).click();await page.waitForURL('**/catalogue.html?category=watches');assert.match(await page.locator('#result-count').textContent(),/Discover and enquire/);
  const footer=page.locator('#footerHost');assert.equal(await footer.getByRole('link',{name:'The archive',exact:true}).isVisible(),true);
  for(const id of ['c-0022','m-0036','m-0038','m-0045','m-0047','w-0021','w-0101','w-0102','w-0103','c-0101','m-0051','m-0052','m-0053','m-0054','m-0055']){await go('lots/'+id+'.html');await layout(id,320);await page.locator('.fv-source-notes summary').click();assert.equal(await page.locator('.fv-source-notes').getAttribute('open'),'');assert.match(await page.locator('.fv-lot-prices').innerText(),/£[\d,]+/)}
- await go('company.html');for(const width of [320,390,1440])await layout('company',width);assert.equal(await page.locator('.role').count(),2);assert.equal(await page.locator('.recruiter a').getAttribute('href'),'mailto:stevelikejobs@proton.me?subject=FlintVellum%20role%20enquiry');
+ await go('company.html');for(const width of [320,390,1440])await layout('company',width);assert.equal(await page.locator('.role').count(),2);assert.equal(await page.locator('.recruiter a').getAttribute('href'),'mailto:stevemercer1@proton.me?subject=FlintVellum%20role%20enquiry');
  await go('archive.html');for(const width of [320,390,1440])await layout('archive',width);assert.doesNotMatch(await page.locator('main').innerText(),/\d/);await page.screenshot({path:path.join(root,'docs/verify-shots/archive.png'),fullPage:true,animations:'disabled'});
  await page.locator('#headerHost').getByRole('link',{name:'FlintVellum home',exact:true}).click();await page.waitForURL(base);
  assert.deepEqual(errors,[],'Browser errors');assert.deepEqual(failed,[],'Failed requests');assert.deepEqual(badResponses,[],'HTTP failures');

@@ -18,6 +18,17 @@ original.select('#how-it-works .steps li')[2].find('p').string=approved['settlem
 for location in original.select('.role-location'):
     location.string=approved['roleLocation']
 original.select_one('#roles-heading').string='Careers'
+original.select('.role')[0].find_all('p',recursive=False)[1].string=approved['backendSalary']
+contact=original.select_one('.recruiter');contact.clear();contact.append(approved['contactLine']);contact.append(original.new_tag('br'))
+email=original.new_tag('a',href=approved['contactMailto']);email.string=approved['contactEmail'];contact.append(email)
+founder=json.loads((ROOT/'docs/founder-copy.json').read_text())
+about=original.select_one('#about');about['class']=['content','wrap','fv-founder','fv-founder-grid']
+about.select_one('#about-heading').string=founder['heading']
+about.select_one('.section-label').string='About the founder'
+line=original.new_tag('p',attrs={'class':'fv-founder-line'});line.string=founder['founderLine'];about.find('h2').insert_after(line)
+body=about.select_one('.about-copy');body['class']=['fv-founder-copy'];body.clear()
+for paragraph in founder['paragraphs']:
+    node=original.new_tag('p');node.string=paragraph;body.append(node)
 s=document(pristine)
 mark=document((ROOT/'assets/brand/monogram.svg').read_text()).svg
 word=document((ROOT/'assets/brand/wordmark.svg').read_text()).svg

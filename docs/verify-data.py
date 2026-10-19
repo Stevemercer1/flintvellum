@@ -6,6 +6,7 @@ from urllib.parse import urlsplit, unquote
 import hashlib, json, re, subprocess
 from archive_display import title
 ROOT=Path(__file__).resolve().parent.parent
+approved=json.loads((ROOT/'docs/site-copy.json').read_text())
 lots=json.loads((ROOT/'_catalogue/lots.json').read_text());sources=json.loads((ROOT/'_catalogue/sources.json').read_text())
 assert len(lots)==259 and len({x['id'] for x in lots})==259
 assert sum(len(x['images']) for x in lots)==989
@@ -16,12 +17,13 @@ for path in pages:
     text=path.read_text();page=BeautifulSoup(text,'html.parser')
     assert text.count('fingerprint.js')==1 and re.search(r'<script src="fingerprint.js" defer></script>\s*</body>',text),path
     assert not page.select('a[href^="data/"]'),path
+    assert not any(stale in text for stale in ['stevelikejobs@proton.me','Tel Aviv, Israel','£110,000']),path
     assert 'Collection report' not in text and 'Download catalogue data' not in text,path
     if path.name=='archive.html':
         assert not re.search(r'\d',page.main.get_text()),path
     footer=page.select_one('#footerHost template nav[aria-label="Footer"]')
     assert len(footer.select('a[href]'))==10,path
-    assert page.select_one('#footerHost .fv-footer-contact-copy a')['href']=='mailto:stevelikejobs@proton.me?subject=FlintVellum%20role%20enquiry',path
+    assert page.select_one('#footerHost .fv-footer-contact-copy a')['href']==approved['contactMailto'],path
     for node in page.select('[src],a[href],link[href]'):
         value=node.get('src',node.get('href'));u=urlsplit(value)
         if u.scheme or u.netloc or not u.path:continue
@@ -47,6 +49,7 @@ for lot in lots:
 original=BeautifulSoup(subprocess.check_output(['git','show','christies-pristine^:index.html'],cwd=ROOT,text=True),'html.parser')
 approved=json.loads((ROOT/'docs/site-copy.json').read_text())
 for location in original.select('.role-location'):location.string=approved['roleLocation']
+original.select('.role')[0].find_all('p',recursive=False)[1].string=approved['backendSalary']
 company=BeautifulSoup((ROOT/'company.html').read_text(),'html.parser')
 careers=BeautifulSoup((ROOT/'careers/index.html').read_text(),'html.parser')
 for page in [company,careers]:
@@ -57,12 +60,16 @@ details=json.loads((ROOT/'docs/role-details.json').read_text())
 assert details['status'] in careers.main.get_text() and details['status'] in company.main.get_text()
 for key in ['backend','sales']:
     role=careers.find(id=details[key]['id'])
-    for line in details[key]['responsibilities']+details[key]['requirements']:assert line in role.get_text()
-assert company.select_one('.recruiter').get_text()==original.select_one('.recruiter').get_text()
-assert company.select_one('.recruiter a')['href']==original.select_one('.recruiter a')['href']
+    for line in details[key]['responsibilities']+details[key]['requirements']+details[key].get('hiringProcess',[]):assert line in role.get_text()
+assert company.select_one('.recruiter').get_text(' ',strip=True)==approved['contactLine']+' '+approved['contactEmail']
+assert company.select_one('.recruiter a')['href']==approved['contactMailto']
 assert (ROOT/'fingerprint.js').read_bytes()==subprocess.check_output(['git','show','HEAD:fingerprint.js'],cwd=ROOT)
 home=BeautifulSoup((ROOT/'index.html').read_text(),'html.parser')
+founder=json.loads((ROOT/'docs/founder-copy.json').read_text())
+assert 200<=len(' '.join(founder['paragraphs']).split())<=280 and len(founder['linkedin'].split())==25
 for page in [home,company]:
+    assert [p.get_text() for p in page.select('#about .fv-founder-copy p')]==founder['paragraphs']
+    assert page.select_one('#about .fv-founder-line').get_text()==founder['founderLine']
     assert page.select('#how-it-works .steps li')[2].find('p').get_text()==approved['settlementStep']
 assert home.select_one('chr-header-carousel-slide .chr-heading-s-serif').get_text()==approved['homeHeroSubtitle']
 assert company.select_one('.hero-copy .intro').get_text()==approved['companyHeroSubtitle']

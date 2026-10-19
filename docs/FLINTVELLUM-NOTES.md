@@ -8,7 +8,7 @@ The expanded catalogue contains 259 closed source records and 989 photographs: 1
 
 The catalogue supports keyword, category, maker and saved-object filters, with Previous and Next controls. Saved selections stay in the visitor’s browser. Galleries support enlarged views, keyboard navigation and touch. Account registration, live bidding and payments have no backend in this static site.
 
-Careers has a dedicated page at careers/. Both roles prefer UK or EU candidates, welcome international candidates and require UK-hours overlap. Their titles, salary lines, recruitment contact and mailto are unchanged.
+Careers has a dedicated page at careers/. Both roles prefer UK or EU candidates, welcome international candidates and require UK-hours overlap. Role titles and the sales package are unchanged. The owner updated backend pay to £90,000–£170,000 plus share options, contact email to stevemercer1@proton.me and location to London, United Kingdom.
 
 The full job descriptions were recovered from ~/Desktop/FlintVellum/flintvellum-phase-2.md. That source and PHASE-1.md explicitly identify the employer and vacancies as fictional examples. The website therefore labels the expanded responsibilities and requirements as draft role outlines, with proposed pay packages. Public copy is stored in role-details.json; no private assessment answers or installer material were imported.
 
@@ -25,3 +25,7 @@ The homepage uses experience.css and experience.js for progressive scroll reveal
 The owner chose confirmed availability only and delegated the selection. No current stock was confirmed, so open bidding stays disabled. A stable hash assigns 82 objects to an enquiry-only sourcing route for a similar piece; 177 retain the closed presentation. Source records are never changed. Visitors can prepare a proposed GBP budget and settlement preference, copy a draft or open their own email app. No inbox is invented, no form claims delivery, and no bids are accepted. The protected recruitment mailto remains unchanged.
 
 Object pages offer an optional GBP reference converter using [Coinbase's documented public exchange-rate endpoint](https://docs.cdp.coinbase.com/coinbase-app/track-apis/exchange-rates). Requests run only when the panel opens, use no credentials, and cover Bitcoin, Ethereum, USDC and USDT separately. Rates expire after five minutes in the browser. Failures, invalid responses and expired references clear the conversion instead of substituting a rate. These are indicative figures excluding fees, not settlement quotes.
+
+The founder About uses the owner-supplied biography in founder-copy.json. The 241-word website version appears on the homepage and company page; the 25-word LinkedIn version is included in founder-about.md and linkedin-role-pack.html. The latter remains a standalone offline drafting tool, excluded from Pages with the rest of docs/.
+
+The backend role prioritises practical cryptocurrency knowledge and requires AI-native use of coding, research, debugging and review tools. A technical test is stage one, followed within one to two working days by a progression decision about a conversation with Steve Mercer. Role copy describes this process; no new test service or application backend has been created.
