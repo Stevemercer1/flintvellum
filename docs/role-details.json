@@ -1,0 +1,43 @@
+{
+  "source": "~/Desktop/FlintVellum/flintvellum-phase-2.md, Indeed postings for Role A and Role B; supported by PHASE-1.md",
+  "status": "These are draft role outlines from a fictional company and hiring brief, not verified live vacancies. The pay figures below describe the proposed packages.",
+  "backend": {
+    "id": "backend-engineer",
+    "intro": "Own the services that keep an auction running correctly, from the first bid to the final settlement. The work centres on reliable backend systems and clear records that help operations resolve payment and delivery exceptions.",
+    "responsibilities": [
+      "Build and maintain bid validation, reserve handling, auction closing and settlement services.",
+      "Handle simultaneous bids, safe retries and duplicate payment events without losing or repeating a transaction.",
+      "Maintain the settlement ledger and work with operations on failed payments and payout reconciliation.",
+      "Take part in code reviews and turn operational problems into small, maintainable service changes."
+    ],
+    "requirements": [
+      "Strong production experience with Node.js and TypeScript, typically five years or more in backend engineering.",
+      "Confidence with SQL, database transactions, concurrency and accurate money calculations.",
+      "Experience with background jobs, payment events and recovery from partial failures.",
+      "The ability to explain technical decisions clearly and work closely with operations colleagues."
+    ],
+    "contextHeading": "The technical work",
+    "context": "The brief specifies Node.js, TypeScript, Fastify and PostgreSQL, with Redis and BullMQ for background work and WebSockets for bid updates. It also includes AWS, Vitest and GitHub Actions. Previous auction experience is not required; crypto experience is useful. The proposed role is a senior individual contributor reporting to the Head of Engineering.",
+    "arrangements": "Full-time and remote, with overlap during UK working hours. International candidates are welcome, with UK or EU candidates preferred. Country-specific employment arrangements and permission to work where you live would need to be confirmed before an offer. Share-option terms would be provided separately from salary."
+  },
+  "sales": {
+    "id": "sales-consignments",
+    "intro": "Build relationships with collectors and dealers who may consign watches, trading cards, or sports and film memorabilia. This is a phone-led role, following the seller relationship from the first conversation through to intake, a completed sale and repeat business.",
+    "responsibilities": [
+      "Find and call collectors and dealers, and follow up on referrals and inbound enquiries.",
+      "Ask useful questions about the item, ownership, condition and the seller’s expectations.",
+      "Explain estimates, reserves, fees and payment timing without promising an auction result.",
+      "Secure consignment agreements and coordinate handover to specialists and operations.",
+      "Keep clear call notes, follow through on commitments and build a pipeline of repeat consignors."
+    ],
+    "requirements": [
+      "A track record of closing by phone, typically five years or more, ideally in auctions, watch dealing, collectibles or another market involving valuable personal assets.",
+      "Evidence of building a pipeline, handling price objections and winning repeat business.",
+      "Confidence discussing valuable objects with collectors and dealers, with the judgement to involve a specialist when needed.",
+      "Consistent follow-up, accurate records and comfort with regular outbound calls."
+    ],
+    "contextHeading": "The seller relationship",
+    "context": "The salesperson owns the relationship; specialists approve authenticity and estimates. The proposed role reports to the Head of Sales and has no direct reports. Success means signed consignments that become completed sales, alongside relationships that bring sellers back.",
+    "arrangements": "Full-time and remote, with seller calls during UK business hours and occasional evening calls by agreement. International candidates are welcome, with UK or EU candidates preferred. Employment arrangements would need to be confirmed for the candidate’s country. On-target earnings include variable commission and are not a guaranteed salary; commission attribution, targets and payment terms would need to be set out in writing."
+  }
+}

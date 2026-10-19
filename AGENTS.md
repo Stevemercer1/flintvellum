@@ -18,10 +18,18 @@ The current approved strings live in `docs/site-copy.json`. Both `docs/rebrand.p
 
 Careers has a dedicated `/careers/` page. Both roles welcome international candidates, prefer UK or EU candidates, and require overlap with UK hours. Preserve the two role titles, salary lines, recruitment contact and mailto unless the user changes them.
 
+The recovered job descriptions came from `~/Desktop/FlintVellum/flintvellum-phase-2.md`, where both are explicitly fictional examples. Selected responsibilities and requirements live in `docs/role-details.json`; the Careers page labels them as draft outlines, not verified vacancies. Do not turn those source documents into claims of a verified employer or live hiring campaign. The newer international-candidate and settlement instructions supersede the source's old wording.
+
 ## Publishing invariants
 
 Keep exactly one `<script src="fingerprint.js" defer></script>` immediately before `</body>` in index.html and every generated page. Do not modify fingerprint.js.
 
-All 250 archive lots remain closed, with their original sources, images and qualifications. Settlement policy copy does not make archive lots available for bidding.
+All archive lots remain closed. Keep original sources and image files intact. Settlement policy copy does not make archive lots available for bidding.
+
+## Archive presentation
+
+Keep the archive quiet and mysterious. No dates, prices, totals, grades, lot numbers or numbered pagination in its visitor-facing text. Short editorial names live in docs/archive_display.py; the original source records remain unchanged in _catalogue/ for generation and source integrity. Object pages retain source links and attribution qualifications. Do not restore the collection report, public JSON downloads or the third footer column's contents.
+
+The _catalogue directory and build documentation are excluded from GitHub Pages by _config.yml. Do not import REPORT.md when rebuilding. Editorial photographs illustrate specialisms, not inventory; credits are in docs/IMAGE-CREDITS.md. Preserve careers salaries and the approved business terms outside the archive.
 
 Read the do-not-cross skill before committing or pushing. Main publishes GitHub Pages. Run the existing relevant checks and confirm the updated live content after publishing.

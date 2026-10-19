@@ -46,7 +46,7 @@
       });
       items.forEach((item, i) => { if (hero) item.inert = i !== index; });
       const announcement = carousel.querySelector('.glide > .visually-hidden');
-      if (announcement) announcement.textContent = `Showing ${index + 1} of ${items.length}`;
+      if (announcement) announcement.textContent = hero ? items[index].querySelector('h2')?.textContent || 'Selected story' : 'More from the archive';
     };
     const move = delta => {
       const max = Math.max(0, items.filter(item => !item.hidden).length - Math.floor(visible));

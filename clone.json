@@ -338,8 +338,7 @@
     "lots": 250,
     "images": 947,
     "status": "closed",
-    "data": "data/lots.json",
-    "sources": "data/sources.json",
-    "report": "data/REPORT.md"
+    "buildData": "_catalogue/lots.json",
+    "buildSources": "_catalogue/sources.json"
   }
 }
