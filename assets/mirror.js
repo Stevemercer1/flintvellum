@@ -25,18 +25,19 @@
     let index = 0, step = 0, visible = 1;
     const bullets = all('.glide__bullet', carousel);
     const update = () => {
+      const activeItems = items.filter(item => !item.hidden);
       const width = track.clientWidth;
       visible = hero ? 1 : upcoming ? (innerWidth < 768 ? 1.15 : 2.4) : lots ? (innerWidth < 768 ? 1.4 : innerWidth < 1224 ? 3.3 : 4.3) : (innerWidth < 768 ? 1.15 : innerWidth < 1224 ? 2.2 : 3.2);
       const gap = lots ? 0 : 10;
       const itemWidth = hero ? width : (width + gap) / visible - gap;
       step = itemWidth + gap;
-      slides.style.width = `${step * items.length}px`;
-      items.forEach((item, i) => {
+      slides.style.width = `${step * activeItems.length}px`;
+      activeItems.forEach((item, i) => {
         item.style.width = `${itemWidth}px`;
         item.style.marginLeft = i ? `${gap / 2}px` : '0';
-        item.style.marginRight = i < items.length - 1 ? `${gap / 2}px` : '0';
+        item.style.marginRight = i < activeItems.length - 1 ? `${gap / 2}px` : '0';
       });
-      index = Math.min(index, Math.max(0, items.length - Math.floor(visible)));
+      index = Math.min(index, Math.max(0, activeItems.length - Math.floor(visible)));
       slides.style.transform = `translate3d(${-index * step}px,0,0)`;
       slides.style.transition = reduced.matches ? 'none' : 'transform 400ms cubic-bezier(.165,.84,.44,1)';
       bullets.forEach((bullet, i) => {
@@ -48,7 +49,7 @@
       if (announcement) announcement.textContent = `Showing ${index + 1} of ${items.length}`;
     };
     const move = delta => {
-      const max = Math.max(0, items.length - Math.floor(visible));
+      const max = Math.max(0, items.filter(item => !item.hidden).length - Math.floor(visible));
       index = hero ? (index + delta + items.length) % items.length : Math.max(0, Math.min(max, index + delta));
       update();
     };
@@ -126,7 +127,7 @@
   const header = document.querySelector('#headerHost')?.shadowRoot;
   if (header) {
     const style = document.createElement('style');
-    style.textContent = '.fv-menu-open{height:auto!important;z-index:60!important;overflow:visible!important}.fv-menu-open>div{opacity:1!important;transform:none!important}.fv-drawer-open{transform:translateX(0)!important;overflow:auto;padding:24px}.fv-drawer-open details{border-bottom:1px solid #ddd;padding:16px 0;font-family:ABCArizonaSans,Arial,sans-serif}.fv-drawer-open summary{cursor:pointer;text-transform:uppercase}.fv-drawer-open details a{display:block;padding:10px 0;font-size:16px}.fv-drawer-open details div{margin:0!important;width:100%!important;padding:8px 0!important;display:block!important}.fv-drawer-open details ul{display:block!important}.fv-drawer-open details img{display:none}';
+    style.textContent = '.fv-menu-open{height:auto!important;z-index:60!important;overflow:visible!important}.fv-menu-open>div{opacity:1!important;transform:none!important}.fv-drawer-open{transform:translateX(0)!important;overflow:auto;padding:24px}.fv-drawer-open details{border-bottom:1px solid var(--fv-rule);padding:16px 0;font-family:ABCArizonaSans,Arial,sans-serif}.fv-drawer-open summary{cursor:pointer;text-transform:uppercase}.fv-drawer-open details a{display:block;padding:10px 0;font-size:16px}.fv-drawer-open details div{margin:0!important;width:100%!important;padding:8px 0!important;display:block!important}.fv-drawer-open details ul{display:block!important}.fv-drawer-open details img{display:none}';
     header.append(style);
     const links = all('nav[aria-label="Primary"] a[aria-controls]', header);
     const closeMenus = () => { all('.fv-menu-open', header).forEach(e => { e.classList.remove('fv-menu-open'); e.inert = true; }); links.forEach(a => a.setAttribute('aria-expanded', 'false')); };
@@ -166,7 +167,7 @@
   const footer = document.querySelector('#footerHost')?.shadowRoot;
   if (footer) {
     const style = document.createElement('style');
-    style.textContent = '@media(max-width:1023px){nav[aria-label="Footer"]>div:nth-child(-n+3){border-bottom:1px solid #333}nav[aria-label="Footer"]>div:nth-child(-n+3) h3{padding:22px 0;cursor:pointer;display:flex;justify-content:space-between}nav[aria-label="Footer"]>div:nth-child(-n+3) h3:after{content:"+"}nav[aria-label="Footer"]>div:nth-child(-n+3):not(.fv-expanded)>:not(h3){display:none}nav[aria-label="Footer"]>div:nth-child(4) h3{display:none}nav[aria-label="Footer"]>div:nth-child(4){padding-top:28px;text-align:center}}';
+    style.textContent = '@media(max-width:1023px){nav[aria-label="Footer"]>div:nth-child(-n+3){border-bottom:1px solid var(--fv-footer-rule)}nav[aria-label="Footer"]>div:nth-child(-n+3) h3{padding:22px 0;cursor:pointer;display:flex;justify-content:space-between}nav[aria-label="Footer"]>div:nth-child(-n+3) h3:after{content:"+"}nav[aria-label="Footer"]>div:nth-child(-n+3):not(.fv-expanded)>:not(h3){display:none}nav[aria-label="Footer"]>div:nth-child(4) h3{display:none}nav[aria-label="Footer"]>div:nth-child(4){padding-top:28px;text-align:center}}';
     footer.append(style);
     all('nav[aria-label="Footer"]>div', footer).slice(0,3).forEach(group => {
       const heading = group.querySelector('h3');

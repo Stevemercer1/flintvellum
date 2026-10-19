@@ -72,5 +72,12 @@
     "https://www.christies.com/-/media/project/christies-discovery/discovery-website/seo/art-movements/renaissance/renaissance-art-hero.jpg?rev=6c3af39a32e0418184ff6a52df0986ad&w=745&hash=ee9ce86a4a2a6c99fee914654f31cd505fb699e4": "assets/images/renaissance-art-hero-d50c892b64.jpg",
     "https://www.christies.com/-/media/project/christies-discovery/discovery-website/homepage/cire/anann-villas-(1).jpg?rev=1edd24e1c9604e98a621d89ba0e697d2&w=745&hash=fe09c63124c40a375f77b6b88e7db74a04d5eab2": "assets/images/anann-villas--1--7e5a951cde.jpg",
     "https://dsl.assets.christies.com/react-legacy-integration/production/latest/index.css": "assets/css/index-c7320dd780.css"
-  }
+  },
+  "brand": "FlintVellum",
+  "company_page": "company.html",
+  "logos": [
+    "assets/brand/monogram.svg",
+    "assets/brand/wordmark.svg"
+  ],
+  "hero_video": "assets/video/hero.mp4"
 }

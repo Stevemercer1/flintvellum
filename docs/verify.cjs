@@ -64,8 +64,19 @@ const server=http.createServer((req,res)=>{
  const footer=page.locator('#footerHost');
  await footer.getByRole('button',{name:/^help$/i}).click();
  assert.equal(await footer.getByRole('button',{name:/^help$/i}).getAttribute('aria-expanded'),'true');
+ await page.goto(base+'company.html',{waitUntil:'networkidle'});
+ const company=[];
+ for(const width of [320,390,1440]){
+   await page.setViewportSize({width,height:900});
+   const layout=await page.evaluate(()=>({width:innerWidth,docWidth:document.documentElement.scrollWidth,roles:document.querySelectorAll('.role').length,mailto:document.querySelector('.recruiter a').getAttribute('href'),analytics:document.querySelectorAll('script[src="fingerprint.js"]').length}));
+   assert.equal(layout.width,layout.docWidth);assert.equal(layout.roles,2);assert.equal(layout.analytics,1);
+   company.push(layout);
+   if(width===1440)await page.screenshot({path:path.join(root,'docs/verify-shots/company.png'),fullPage:true});
+ }
+ const home=page.locator('#headerHost').getByRole('link',{name:'FlintVellum home'});
+ await home.click();await page.waitForURL(base);
  assert.deepEqual(errors,[],'Browser errors');assert.deepEqual(failed,[],'Failed requests');
- console.log(JSON.stringify({layouts,errors,failed,remote,interactions:'passed'},null,2));
+ console.log(JSON.stringify({layouts,errors,failed,remote,company,interactions:'passed'},null,2));
  fs.writeFileSync(path.join(root,'docs/verify-shots/results.json'),JSON.stringify({layouts,errors,failed,remote},null,2));
  }finally{await browser.close();server.close()}
 })().catch(e=>{console.error(e);server.close();process.exitCode=1});

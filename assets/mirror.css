@@ -1,5 +1,5 @@
 /* Hardening layer for the captured page. The source styles remain authoritative. */
-:root { --fv-ink: #222222; --fv-paper: #ffffff; --fv-soft: #f5f5f5; --fv-rule: #d9d9d9; }
+:root { --fv-ink: #222222; --fv-paper: #ffffff; --fv-soft: #f5f5f5; --fv-rule: #d9d9d9; --fv-footer-rule: color-mix(in srgb, var(--fv-paper) 20%, var(--fv-ink)); }
 html,body { max-width:100%; }
 body { margin:0; }
 #headerHost { position:relative; z-index:30; }
@@ -49,3 +49,15 @@ chr-carousel { display:block; }
 }
 
 [hidden] { display:none!important; }
+.fv-legacy { max-width:1440px; margin-inline:auto; background:var(--fv-paper); }
+.fv-legacy h1 { font:300 clamp(40px,5vw,64px)/1.05 ABCArizonaSerif,Georgia,serif; max-width:16ch; }
+.fv-legacy .hero-copy { padding:16px 0 32px; }
+.fv-legacy .eyebrow { font:400 12px/1.6 ABCArizonaSans,Arial,sans-serif; letter-spacing:.08em; text-transform:uppercase; }
+.fv-legacy .hero-caption { padding:20px 0; }
+.fv-legacy .button { display:inline-flex; align-items:center; gap:16px; padding:12px 20px; border:1px solid var(--fv-ink); color:var(--fv-ink); font-size:14px; }
+.fv-legacy .button svg { width:16px; }
+.fv-legacy .steps { padding:0; list-style:none; counter-reset:fv-step; }
+.fv-legacy .steps li { counter-increment:fv-step; padding:24px 0; border-bottom:1px solid var(--fv-rule); }
+.fv-legacy .steps li::before { content:counter(fv-step,decimal-leading-zero); float:left; margin:0 24px 24px 0; font:300 30px ABCArizonaSerif,Georgia,serif; }
+.fv-legacy .category { padding:24px 0; border-bottom:1px solid var(--fv-rule); }
+.fv-legacy .terms { margin-top:24px; }
