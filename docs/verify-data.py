@@ -7,17 +7,17 @@ import hashlib, json, re, subprocess
 from archive_display import title
 ROOT=Path(__file__).resolve().parent.parent
 lots=json.loads((ROOT/'_catalogue/lots.json').read_text());sources=json.loads((ROOT/'_catalogue/sources.json').read_text())
-assert len(lots)==250 and len({x['id'] for x in lots})==250
-assert sum(len(x['images']) for x in lots)==947
-assert sum(x['result'] is not None for x in lots)==127
+assert len(lots)==259 and len({x['id'] for x in lots})==259
+assert sum(len(x['images']) for x in lots)==989
+assert sum(x['result'] is not None for x in lots)==128
 pages=[ROOT/name for name in ['index.html','catalogue.html','archive.html','company.html','careers/index.html']]+list((ROOT/'lots').glob('*.html'))
-assert len(pages)==255
+assert len(pages)==264
 for path in pages:
     text=path.read_text();page=BeautifulSoup(text,'html.parser')
     assert text.count('fingerprint.js')==1 and re.search(r'<script src="fingerprint.js" defer></script>\s*</body>',text),path
     assert not page.select('a[href^="data/"]'),path
     assert 'Collection report' not in text and 'Download catalogue data' not in text,path
-    if path.name not in ['index.html','company.html'] or path.parent.name=='lots':
+    if path.name=='archive.html':
         assert not re.search(r'\d',page.main.get_text()),path
     footer=page.select_one('#footerHost template nav[aria-label="Footer"]')
     assert len(footer.select('a[href]'))==10,path
@@ -34,7 +34,13 @@ for lot in lots:
     assert [a['href'] for a in page.select('[data-gallery-index]')]==lot['images']
     assert page.select_one('#lot-image')['src']==lot['images'][0]
     assert page.select_one('.fv-lot-summary .fv-source-link')['href']==sources[lot['id']]['url']
-    assert 'Auction closed' in page.main.get_text()
+    assert page.select_one('.fv-closed').get_text() in ['Auction closed','Enquiry only']
+    assert 'not available to bid on here' in page.main.get_text()
+    assert bool(page.select_one('[data-enquiry-form]'))==(page.select_one('.fv-closed').get_text()=='Enquiry only')
+    assert page.select_one('.fv-currency form [name=amount]')['value']==str(lot['estimateLow'])
+    prices=page.select_one('.fv-lot-prices').get_text()
+    assert f"£{lot['estimateLow']:,.0f}" in prices and f"£{lot['estimateHigh']:,.0f}" in prices
+    assert ('Derived historical range' in prices)==(sources[lot['id']]['estimateBasis']=='derived_from_verified_sale')
     assert 'FlintVellum has not independently inspected' in page.select_one('.fv-source-notes').get_text()
     for image in sources[lot['id']]['images']:
         assert hashlib.sha256((ROOT/image['path']).read_bytes()).hexdigest()==image['sha256'],image['path']
@@ -69,4 +75,4 @@ assert not (ROOT/'data').exists()
 assert '_catalogue' in (ROOT/'_config.yml').read_text()
 assert not list(ROOT.rglob('REPORT.md'))
 for a in home.main.select('a[href]'):assert not urlsplit(a['href']).netloc
-print('PASS: every route, original image hash, catalogue source, number-free archive, compact footer, approved settlement/careers copy and analytics hook.')
+print('PASS: every route, original image hash, catalogue source, historical price labels, compact footer, approved settlement/careers copy and analytics hook.')

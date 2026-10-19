@@ -24,11 +24,11 @@ The recovered job descriptions came from `~/Desktop/FlintVellum/flintvellum-phas
 
 Keep exactly one `<script src="fingerprint.js" defer></script>` immediately before `</body>` in index.html and every generated page. Do not modify fingerprint.js.
 
-All archive lots remain closed. Keep original sources and image files intact. Settlement policy copy does not make archive lots available for bidding.
+The user chose confirmed availability only. The underlying source records remain closed. No lots have confirmed current availability. Keep bidding disabled; do not invent stock. A stable selection is enquiry-only for sourcing similar pieces, with clearly labelled local email drafts. There is no sales inbox or submission backend configured. Keep original sources and image files intact. Settlement policy copy does not make archive lots available for bidding.
 
 ## Archive presentation
 
-Keep the archive quiet and mysterious. No dates, prices, totals, grades, lot numbers or numbered pagination in its visitor-facing text. Short editorial names live in docs/archive_display.py; the original source records remain unchanged in _catalogue/ for generation and source integrity. Object pages retain source links and attribution qualifications. Do not restore the collection report or public JSON downloads. The footer uses a compact branded layout with visible navigation, the protected recruitment contact and the approved settlement policy; do not leave an empty column.
+Keep the archive quiet and mysterious. No dates, totals, grades, lot numbers or numbered pagination in its visitor-facing text. The latest instruction restores prices: show labelled historical GBP estimates or derived ranges on every lot, never imply that they are asking prices. Short editorial names live in docs/archive_display.py; the original source records remain unchanged in _catalogue/ for generation and source integrity. Object pages retain source links and attribution qualifications. Do not restore the collection report or public JSON downloads. The footer uses a compact branded layout with visible navigation, the protected recruitment contact and the approved settlement policy; do not leave an empty column.
 
 The _catalogue directory and build documentation are excluded from GitHub Pages by _config.yml. Do not import REPORT.md when rebuilding. Editorial photographs illustrate specialisms, not inventory; credits are in docs/IMAGE-CREDITS.md. Preserve careers salaries and the approved business terms outside the archive.
 

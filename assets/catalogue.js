@@ -21,7 +21,7 @@
    const matches=records.filter(e=>{const d=e.dataset;return(category==='all'||d.category===category)&&(!subtype||d.subtype===subtype)&&(!maker||d.maker===maker)&&(!form.elements.saved.checked||saved.has(d.id))&&q.every(word=>norm(d.search).includes(word))});
    const pages=Math.max(1,Math.ceil(matches.length/24));currentPage=Math.min(currentPage,pages);records.forEach(e=>e.hidden=true);
    matches.forEach((e,i)=>{grid.append(e);e.hidden=i<(currentPage-1)*24||i>=currentPage*24;if(!e.hidden)e.querySelectorAll('img').forEach(img=>img.loading='eager')});
-   document.querySelector('#result-count').textContent=matches.length?'From the archive · Auctions closed':'Nothing found in this corner of the archive';
+   document.querySelector('#result-count').textContent=matches.length?'From the archive · Discover and enquire':'Nothing found in this corner of the archive';
    document.querySelector('.fv-empty').hidden=matches.length!==0;
    all('[data-category]').filter(e=>e.matches('a')).forEach(a=>{if(a.dataset.category===category)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
    pager.replaceChildren();

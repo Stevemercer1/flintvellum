@@ -255,7 +255,16 @@
     "lots/m-0047.html",
     "lots/m-0048.html",
     "lots/m-0049.html",
-    "lots/m-0050.html"
+    "lots/m-0050.html",
+    "lots/w-0101.html",
+    "lots/w-0102.html",
+    "lots/w-0103.html",
+    "lots/c-0101.html",
+    "lots/m-0051.html",
+    "lots/m-0052.html",
+    "lots/m-0053.html",
+    "lots/m-0054.html",
+    "lots/m-0055.html"
   ],
   "method": "Rendered HTML mirror with preserved shadow roots, original CSS, and local assets",
   "assets": {
@@ -335,8 +344,8 @@
   ],
   "hero_video": "assets/video/hero.mp4",
   "collection": {
-    "lots": 250,
-    "images": 947,
+    "lots": 259,
+    "images": 989,
     "status": "closed",
     "buildData": "_catalogue/lots.json",
     "buildSources": "_catalogue/sources.json"

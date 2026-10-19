@@ -11593,5 +11593,466 @@
       "Object year can denote the catalogued season, event or film release rather than a dated manufacturing year.",
       "Original catalogue title: Tom Brady Super Bowl LI ‘28-3 Comeback' New England Patriots Game Used Football | Largest Super Bowl Comeback in NFL History"
     ]
+  },
+  "w-0101": {
+    "url": "https://www.phillips.com/detail/jaegerlecoultre/211157",
+    "originalLot": "66",
+    "retrievedAt": "2026-10-19T07:30:24.330985Z",
+    "yearText": "2013",
+    "certificationNumber": null,
+    "referenceUrls": [
+      "https://www.phillips.com/detail/jaegerlecoultre/211157"
+    ],
+    "estimateBasis": "published_estimate",
+    "estimateMethod": "",
+    "originalCurrency": "CHF",
+    "originalEstimateLow": 4000,
+    "originalEstimateHigh": 8000,
+    "originalPrice": 16510,
+    "originalPriceType": "premium_inclusive",
+    "fxToGBP": 0.9100837277029487,
+    "fxDate": "2026-10-16",
+    "fxSourceUrl": "https://api.frankfurter.dev/v1/latest?base=GBP",
+    "images": [
+      {
+        "path": "img/w-0101/01.jpg",
+        "url": "https://dist.phillips.com/auction-assets/CH080125/211157_001.jpg",
+        "sha256": "c834b14f9249b5e07ffbe41d2885dcb418e65321fa3adf90921b5ed20593dc7a"
+      },
+      {
+        "path": "img/w-0101/02.jpg",
+        "url": "https://dist.phillips.com/auction-assets/CH080125/211157_002.jpg",
+        "sha256": "9f00cdfd934cbed1985516cc02e62666848aad8ba1989d4ac197c9729a7a0718"
+      },
+      {
+        "path": "img/w-0101/03.jpg",
+        "url": "https://dist.phillips.com/auction-assets/CH080125/211157_003.jpg",
+        "sha256": "95999f3b0af4d966e0d16c7d55d5cb842d17bc081017549c80e4538d1c298621"
+      },
+      {
+        "path": "img/w-0101/04.jpg",
+        "url": "https://dist.phillips.com/auction-assets/CH080125/211157_004.jpg",
+        "sha256": "e9c018b46da5a2442d220807dd73399bd6e5ef4fb33a8719d63980ffa982a63f"
+      }
+    ],
+    "notes": [
+      "Source case number: 2/50; 2’786’823"
+    ]
+  },
+  "w-0102": {
+    "url": "https://www.phillips.com/detail/richard-mille/223815",
+    "originalLot": "66",
+    "retrievedAt": "2026-10-19T07:30:39.237823Z",
+    "yearText": "Circa 2017",
+    "certificationNumber": null,
+    "referenceUrls": [
+      "https://www.phillips.com/detail/richard-mille/223815"
+    ],
+    "estimateBasis": "published_estimate",
+    "estimateMethod": "",
+    "originalCurrency": "USD",
+    "originalEstimateLow": 140000,
+    "originalEstimateHigh": 280000,
+    "originalPrice": 190500,
+    "originalPriceType": "premium_inclusive",
+    "fxToGBP": 0.7499062617172854,
+    "fxDate": "2026-10-16",
+    "fxSourceUrl": "https://api.frankfurter.dev/v1/latest?base=GBP",
+    "images": [
+      {
+        "path": "img/w-0102/01.jpg",
+        "url": "https://dist.phillips.com/auction-assets/NY080225/223815_001.jpg",
+        "sha256": "51f0a552a3723e86ff8651eaa261977169922026feb782f5c7a588fa8725f858"
+      },
+      {
+        "path": "img/w-0102/02.jpg",
+        "url": "https://dist.phillips.com/auction-assets/NY080225/223815_002.jpg",
+        "sha256": "4853437ce62ec8c628a7e2c7046d94477b7b1d06fbac2b2ffaa758a524dc88b6"
+      },
+      {
+        "path": "img/w-0102/03.jpg",
+        "url": "https://dist.phillips.com/auction-assets/NY080225/223815_003.jpg",
+        "sha256": "df0506dba156ce758bf4f33ac07f9c24114e8575c5a0f3a155edcf80592f74a1"
+      },
+      {
+        "path": "img/w-0102/04.jpg",
+        "url": "https://dist.phillips.com/auction-assets/NY080225/223815_004.jpg",
+        "sha256": "5f57364098a1cbdea081188ceb7c89e2c29329ae6ed99096574097f1cbf0b5f9"
+      },
+      {
+        "path": "img/w-0102/05.jpg",
+        "url": "https://dist.phillips.com/auction-assets/NY080225/223815_005.jpg",
+        "sha256": "3dbf19b9199b78df7181fffd24b03bd6982249e1b75957d3bffb19f7668a6f76"
+      },
+      {
+        "path": "img/w-0102/06.jpg",
+        "url": "https://dist.phillips.com/auction-assets/NY080225/223815_006.jpg",
+        "sha256": "67c1b707d4e9d01bbea62d872320431193823d732e2fcbb9c48dcb9c84aa9238"
+      }
+    ],
+    "notes": [
+      "Source case number: 334"
+    ]
+  },
+  "w-0103": {
+    "url": "https://www.phillips.com/detail/de-bethune/215931",
+    "originalLot": "892",
+    "retrievedAt": "2026-10-19T07:31:12.253575Z",
+    "yearText": "Circa 2022",
+    "certificationNumber": null,
+    "referenceUrls": [
+      "https://www.phillips.com/detail/de-bethune/215931",
+      "https://www.debethune.ch/application/files/2316/4846/7240/DB28GS_JPS__Technical_Specifications_EN.pdf"
+    ],
+    "estimateBasis": "published_estimate",
+    "estimateMethod": "",
+    "originalCurrency": "HKD",
+    "originalEstimateLow": 400000,
+    "originalEstimateHigh": 650000,
+    "originalPrice": 698500,
+    "originalPriceType": "premium_inclusive",
+    "fxToGBP": 0.09554931300043953,
+    "fxDate": "2026-10-16",
+    "fxSourceUrl": "https://api.frankfurter.dev/v1/latest?base=GBP",
+    "images": [
+      {
+        "path": "img/w-0103/01.jpg",
+        "url": "https://dist.phillips.com/auction-assets/HK080225/215931_001.jpg",
+        "sha256": "0c0b17f5c28db7ffb8d8d7d036681625c569d8b324cd028db9092c37e010f6cc"
+      },
+      {
+        "path": "img/w-0103/02.jpg",
+        "url": "https://dist.phillips.com/auction-assets/HK080225/215931_002.jpg",
+        "sha256": "68e0d91912bf3c545b0fe977aed7716cca56b94481c25a9471ac47c39adf0ccc"
+      },
+      {
+        "path": "img/w-0103/03.jpg",
+        "url": "https://dist.phillips.com/auction-assets/HK080225/215931_003.jpg",
+        "sha256": "ddce69061fce552b8b3e8301abcb8a75388469b9107aaa8a50de027bff351cb0"
+      },
+      {
+        "path": "img/w-0103/04.jpg",
+        "url": "https://dist.phillips.com/auction-assets/HK080225/215931_004.jpg",
+        "sha256": "c05b5ccb521453fc6c17d98bd74616cfe6ed024d6f981c5baaa75c4863611976"
+      },
+      {
+        "path": "img/w-0103/05.jpg",
+        "url": "https://dist.phillips.com/auction-assets/HK080225/215931_005.jpg",
+        "sha256": "4b5314af030cedf1abdded7c0eb44351f78880042ef804fb064f9cbfe3386fe0"
+      },
+      {
+        "path": "img/w-0103/06.jpg",
+        "url": "https://dist.phillips.com/auction-assets/HK080225/215931_006.jpg",
+        "sha256": "23e8ce32855457777cf046785df39c613761030ff223406695e57a2a3f663a46"
+      }
+    ],
+    "notes": [
+      "Source case number: 17/50",
+      "Catalogue model spelling DBS28GS JPS corrected to DB28GS JPS against the maker technical specification. Published reference DB28GSV2JPS unchanged."
+    ]
+  },
+  "c-0101": {
+    "url": "https://www.fanaticscollect.com/premier/41390ad4-3f4c-11f1-88c1-027aafb6d205/1996-pokemon-japanese-bandai-carddass-vending-prism-charizard-6-psa-10-gem-mint",
+    "originalLot": "May PA Lot: 338",
+    "retrievedAt": "2026-10-19T07:31:24.941711Z",
+    "yearText": "1996",
+    "certificationNumber": "25917060",
+    "referenceUrls": [
+      "https://www.fanaticscollect.com/premier/41390ad4-3f4c-11f1-88c1-027aafb6d205/1996-pokemon-japanese-bandai-carddass-vending-prism-charizard-6-psa-10-gem-mint",
+      "https://www.psacard.com/cert/25917060/psa"
+    ],
+    "estimateBasis": "derived_from_verified_sale",
+    "estimateMethod": "Indicative range: 80%-120% of the reported final hammer bid.",
+    "originalCurrency": "USD",
+    "originalEstimateLow": null,
+    "originalEstimateHigh": null,
+    "originalPrice": 18250.0,
+    "originalPriceType": "hammer",
+    "fxToGBP": 0.7499062617172854,
+    "fxDate": "2026-10-16",
+    "fxSourceUrl": "https://api.frankfurter.dev/v1/latest?base=GBP",
+    "images": [
+      {
+        "path": "img/c-0101/01.jpg",
+        "url": "https://dilxwvfkfup17.cloudfront.net/eyJ0YWciOiIiLCJ2YWx1ZSI6ImF0RFY1REd0OWthRFhKaUpOSzE5bElTQ0oxYUNDR2t4cGU4RlNicGlMMDMzNGpZc0ZnUWM5bnJTdlhwQ0JINVcraHhUUXVTRDR1V0I0VWo3WW9aMDhnPT0iLCJtYWMiOiJjOGQwZWMwNjE3ODk3YjM1YzdjYjZhM2JlYWY1Y2M4YTQyODUzN2VmN2ZhM2FjMjc1ZDQzMTFmNmQzMWJmYTJlIiwiaXYiOiJ3VWM3aEVGcFV1UkhncnVaTVVWekNnPT0ifQ==",
+        "sha256": "0c9d31a939cbe5f3c7152c7dec811a92e008221738b04e78f81ef91d3527cb53"
+      },
+      {
+        "path": "img/c-0101/02.jpg",
+        "url": "https://dilxwvfkfup17.cloudfront.net/eyJ0YWciOiIiLCJ2YWx1ZSI6ImF0RFY1REd0OWthRFhKaUpOSzE5bElTQ0oxYUNDR2t4cGU4RlNicGlMMDMzNGpZc0ZnUWM5bnJTdlhwQ0JINVcvY2lBcHRDdk5KMlNBa0RrMG45VDVnPT0iLCJtYWMiOiI0MjUxMjVhOTUzMzVjN2I4YmY4NGI0NGIwMjRhODEwZmFhMGUxOTFjMWI2OTg4NmUxMmJjNzg3MmQ4NTg2Yjg0IiwiaXYiOiJ3VWM3aEVGcFV1UkhncnVaTVVWekNnPT0ifQ==",
+        "sha256": "1f5e9f435b069626f49ef4ccb4a6c26ca02f6bee84541fd2922eb6afde5c7c7f"
+      }
+    ],
+    "notes": [
+      "Card issuer normalized from the catalogue brand and release name.",
+      "The auction house does not publish an estimate on this page.",
+      "Published premium-inclusive sale total: 21900.0 USD",
+      "Approved image exception: only 2 distinct usable gallery images."
+    ]
+  },
+  "m-0051": {
+    "url": "https://www.sothebys.com/en/buy/auction/2026/summer-sports-classic/lebron-james-los-angeles-lakers-2023-2024-game-3",
+    "originalLot": "15",
+    "retrievedAt": "2026-10-19T07:31:57.370606Z",
+    "yearText": "2023-2024",
+    "certificationNumber": null,
+    "referenceUrls": [
+      "https://www.sothebys.com/en/buy/auction/2026/summer-sports-classic/lebron-james-los-angeles-lakers-2023-2024-game-3"
+    ],
+    "estimateBasis": "published_estimate",
+    "estimateMethod": "",
+    "originalCurrency": "USD",
+    "originalEstimateLow": 60000.0,
+    "originalEstimateHigh": 80000.0,
+    "originalPrice": null,
+    "originalPriceType": null,
+    "fxToGBP": 0.7499062617172854,
+    "fxDate": "2026-10-16",
+    "fxSourceUrl": "https://api.frankfurter.dev/v1/latest?base=GBP",
+    "images": [
+      {
+        "path": "img/m-0051/01.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/ea29c9b/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2Fe0%2F33%2Fc5edf98c471391936dc0404ef146%2Fn12200-djpyx-t1-01.jpg",
+        "sha256": "ab6c56513aa7bb9c0d598d4d257bd300a32affa2c81d8366cff7a70910dcf12c"
+      },
+      {
+        "path": "img/m-0051/02.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/408bf40/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2F22%2F72%2F6174c478434ca6c673d82edf8600%2Fn12200-djpyx-t1-02.jpg",
+        "sha256": "ddb1611d3d158a2cc898648fb9c1e0fdd59283d8715c0336c87d9883e926977e"
+      },
+      {
+        "path": "img/m-0051/03.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/40c802a/2147483647/strip/true/crop/2518x3300+0+0/resize/2048x2684!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2Fe4%2F03%2F88eb4a3c472c9f8623fe0261d429%2Fat00093-1.jpg",
+        "sha256": "50acae47638131d6915b462cb423b75e9a5a213ba6c525e753baf9bbf13dad6c"
+      },
+      {
+        "path": "img/m-0051/04.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/c35be56/2147483647/strip/true/crop/2525x3300+0+0/resize/2048x2677!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2F73%2F3b%2Fb4e2709c487aaf0238e86a930b09%2Fat00093-2.jpg",
+        "sha256": "7eb6febf03386c985195434d9be89f09a105d8a324d98e78f21a8d5f9d962887"
+      }
+    ],
+    "notes": [
+      "Memorabilia subtype: sports",
+      "Public result not treated as verified hammer.",
+      "Condition/provenance statements are auction catalogue attributions.",
+      "Object year can denote the catalogued season, event or film release rather than a dated manufacturing year.",
+      "Original catalogue title: LeBron James Los Angeles Lakers 2023-2024 Game Worn Jersey | Matched to 4 Games | Double-Double"
+    ]
+  },
+  "m-0052": {
+    "url": "https://www.sothebys.com/en/buy/auction/2026/summer-sports-classic/michael-jordan-signed-career-tribute-basketball",
+    "originalLot": "22",
+    "retrievedAt": "2026-10-19T07:32:21.432025Z",
+    "yearText": null,
+    "certificationNumber": null,
+    "referenceUrls": [
+      "https://www.sothebys.com/en/buy/auction/2026/summer-sports-classic/michael-jordan-signed-career-tribute-basketball"
+    ],
+    "estimateBasis": "published_estimate",
+    "estimateMethod": "",
+    "originalCurrency": "USD",
+    "originalEstimateLow": 5000.0,
+    "originalEstimateHigh": 7000.0,
+    "originalPrice": null,
+    "originalPriceType": null,
+    "fxToGBP": 0.7499062617172854,
+    "fxDate": "2026-10-16",
+    "fxSourceUrl": "https://api.frankfurter.dev/v1/latest?base=GBP",
+    "images": [
+      {
+        "path": "img/m-0052/01.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/b781334/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2F17%2F72%2Fd2e7e1244c61b45531a3dae4ef7b%2Fn12200-djzmx-t2-02.jpg",
+        "sha256": "52ea955a4d50fc26d295f8330850bd93bb95f8ebcb00f0612ee2e54b3b4c031d"
+      },
+      {
+        "path": "img/m-0052/02.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/44a027e/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2F85%2F69%2F1a6f650a4b5b994d017892a2205c%2Fn12200-djzmx-t2-03.jpg",
+        "sha256": "c8a4e66bac6a41d02165e273bd47633410f29ada5bfc5f68e79161ca901a284f"
+      },
+      {
+        "path": "img/m-0052/03.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/227866d/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2Fdd%2F3b%2Fa147f843480db6fabb574a05c76f%2Fn12200-djzmx-t2-01.jpg",
+        "sha256": "21654ba03d59fccc15daed2845783be1e64ce321c3801f8265eda12dbca452e9"
+      },
+      {
+        "path": "img/m-0052/04.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/4372f99/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2F20%2F9d%2F780784cd4d84b6c43cf279f5a871%2Fn12200-djzmx-t2-04.jpg",
+        "sha256": "8a8bbe568310ce3b182ee6ea2c970e8263207c8fa40c8a24124d1c03744fe66a"
+      },
+      {
+        "path": "img/m-0052/05.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/9b9234f/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2F7e%2F11%2F20aebc0f4d908ba05527359f8e49%2Fn12200-djzmx-t2-05.jpg",
+        "sha256": "430bb88b989ab86aa757f5abd9ebea4082ac7b72e01d9bda206391873baa700a"
+      }
+    ],
+    "notes": [
+      "Memorabilia subtype: sports",
+      "Public result not treated as verified hammer.",
+      "Condition/provenance statements are auction catalogue attributions.",
+      "Object year can denote the catalogued season, event or film release rather than a dated manufacturing year.",
+      "Career-biography dates were not treated as manufacturing or signing dates for this basketball."
+    ]
+  },
+  "m-0053": {
+    "url": "https://www.sothebys.com/en/buy/auction/2026/summer-sports-classic/kobe-bryant-signed-basketball-2",
+    "originalLot": "23",
+    "retrievedAt": "2026-10-19T07:32:35.632163Z",
+    "yearText": null,
+    "certificationNumber": null,
+    "referenceUrls": [
+      "https://www.sothebys.com/en/buy/auction/2026/summer-sports-classic/kobe-bryant-signed-basketball-2"
+    ],
+    "estimateBasis": "published_estimate",
+    "estimateMethod": "",
+    "originalCurrency": "USD",
+    "originalEstimateLow": 3000.0,
+    "originalEstimateHigh": 5000.0,
+    "originalPrice": null,
+    "originalPriceType": null,
+    "fxToGBP": 0.7499062617172854,
+    "fxDate": "2026-10-16",
+    "fxSourceUrl": "https://api.frankfurter.dev/v1/latest?base=GBP",
+    "images": [
+      {
+        "path": "img/m-0053/01.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/c52ee7c/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2F8c%2F8f%2Fedb2b4c544d1850c14f9ba54d81a%2Fn12200-djzmy-t3-02.jpg",
+        "sha256": "e2676653cc66d8f11d74128ea01a9cdc0dc52f0dd5f42ee0e0624803a777a3f9"
+      },
+      {
+        "path": "img/m-0053/02.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/db43287/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2F6a%2F93%2F78d1cfd2421fb1aebde3257db245%2Fn12200-djzmy-t3-03.jpg",
+        "sha256": "383e9f777f00f7a46379a4dfd9ea9e6d33d422be94d33cf72ea9ad82d7a04fe7"
+      },
+      {
+        "path": "img/m-0053/03.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/32fd083/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2Ff8%2F0f%2F3d1deea747b69fb62f944b08e487%2Fn12200-djzmy-t3-01.jpg",
+        "sha256": "2986e7410277747dd7005d2b4b8f820c43d28932cbfa4095fe3202e49e047e77"
+      },
+      {
+        "path": "img/m-0053/04.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/71c7591/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2F6a%2Fe3%2F80936af04a0a8a21b3a06960290c%2Fn12200-djzmy-t3-04.jpg",
+        "sha256": "5f4ba7032b383a161114f72309ef271f3060c09613e3d10d5681d7d29041b0e1"
+      },
+      {
+        "path": "img/m-0053/05.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/d32a335/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2Fe0%2F69%2F623486ee46daa80b295dcc468b5d%2Fn12200-djzmy-t3-05.jpg",
+        "sha256": "6ef34385d6375e7abb7c7ba2f9b3501226405115ff4f8c5cf2822e572191e104"
+      }
+    ],
+    "notes": [
+      "Memorabilia subtype: sports",
+      "Public result not treated as verified hammer.",
+      "Condition/provenance statements are auction catalogue attributions.",
+      "Object year can denote the catalogued season, event or film release rather than a dated manufacturing year.",
+      "Career-biography dates were not treated as manufacturing or signing dates for this basketball."
+    ]
+  },
+  "m-0054": {
+    "url": "https://www.sothebys.com/en/buy/auction/2026/summer-sports-classic/allen-iverson-philadelphia-76ers-2000-2001-game",
+    "originalLot": "29",
+    "retrievedAt": "2026-10-19T07:32:59.431341Z",
+    "yearText": "2000-2001",
+    "certificationNumber": null,
+    "referenceUrls": [
+      "https://www.sothebys.com/en/buy/auction/2026/summer-sports-classic/allen-iverson-philadelphia-76ers-2000-2001-game"
+    ],
+    "estimateBasis": "published_estimate",
+    "estimateMethod": "",
+    "originalCurrency": "USD",
+    "originalEstimateLow": 40000.0,
+    "originalEstimateHigh": 60000.0,
+    "originalPrice": null,
+    "originalPriceType": null,
+    "fxToGBP": 0.7499062617172854,
+    "fxDate": "2026-10-16",
+    "fxSourceUrl": "https://api.frankfurter.dev/v1/latest?base=GBP",
+    "images": [
+      {
+        "path": "img/m-0054/01.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/66eea04/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2Fad%2Fa3%2Fc472c5d142de83059c16d582e9f0%2Fn12200-dndvl-02.jpg",
+        "sha256": "049ac3edeba129bcb8668ef1763f8544ff102f080c498730b010ca516bcdafbd"
+      },
+      {
+        "path": "img/m-0054/02.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/b18e8d0/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2Fba%2F57%2F7d08e2984c9393b38ab1632a0179%2Fn12200-dndvl-01.jpg",
+        "sha256": "b452f5f648c281fbea14547970ccaa77a98ef02b98f50ebf30b1ad7ed518ddf5"
+      },
+      {
+        "path": "img/m-0054/03.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/f29e591/2147483647/strip/true/crop/4987x6519+0+0/resize/2048x2677!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2F52%2F20%2F5ea3efc946b9baef6859af7fa214%2Fskm-c361i26062212140-0003.jpg",
+        "sha256": "2f810b527e5af4dee0f872a986c0800b2801b94af029e0d69bb40a92b479903a"
+      },
+      {
+        "path": "img/m-0054/04.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/e6baab6/2147483647/strip/true/crop/2353x2353+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2F43%2F20%2F1c61f46b462580625352d6efef9e%2Fn12200-dndvl-03.jpg",
+        "sha256": "179d5e3816baacae1ee643b9ad190f84961d92f4b5f4dfd70f42c6e57d71d6ae"
+      },
+      {
+        "path": "img/m-0054/05.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/5d54ded/2147483647/strip/true/crop/4892x6300+0+0/resize/2048x2637!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2Fb5%2Fbb%2Ff18eae9049a0a3070a2d691223f8%2Fskm-c361i26062212140-0005.jpg",
+        "sha256": "069bd99a0083e4fe445d9121a835d44ac04fdaa9e750c040318386f364f1fffc"
+      }
+    ],
+    "notes": [
+      "Memorabilia subtype: sports",
+      "Public result not treated as verified hammer.",
+      "Condition/provenance statements are auction catalogue attributions.",
+      "Object year can denote the catalogued season, event or film release rather than a dated manufacturing year.",
+      "Original catalogue title: Allen Iverson Philadelphia 76ers 2000-2001 Game Worn and Signed Jersey | Matched to 2 Games | 49 Points | 47 Points | MVP Season"
+    ]
+  },
+  "m-0055": {
+    "url": "https://www.sothebys.com/en/buy/auction/2026/summer-sports-classic/michael-jordan-signed-im-back-basketball",
+    "originalLot": "45",
+    "retrievedAt": "2026-10-19T07:33:37.702509Z",
+    "yearText": null,
+    "certificationNumber": null,
+    "referenceUrls": [
+      "https://www.sothebys.com/en/buy/auction/2026/summer-sports-classic/michael-jordan-signed-im-back-basketball"
+    ],
+    "estimateBasis": "published_estimate",
+    "estimateMethod": "",
+    "originalCurrency": "USD",
+    "originalEstimateLow": 6000.0,
+    "originalEstimateHigh": 10000.0,
+    "originalPrice": null,
+    "originalPriceType": null,
+    "fxToGBP": 0.7499062617172854,
+    "fxDate": "2026-10-16",
+    "fxSourceUrl": "https://api.frankfurter.dev/v1/latest?base=GBP",
+    "images": [
+      {
+        "path": "img/m-0055/01.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/37ffa41/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2Ff7%2Fa1%2Fdd61e6b442bdb3af3e26d97e9e46%2Fn12200-dk4jj-t1-01.jpg",
+        "sha256": "7de19c9aa4de5933cb5b19d1c5e9092cee37c5d227e607aedd54e57987ae3bfd"
+      },
+      {
+        "path": "img/m-0055/02.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/b56fd64/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2F4a%2F13%2F99f3c85640c1bf05179f00da74b7%2Fn12200-dk4jj-t1-02.jpg",
+        "sha256": "1c6985cb18e26b4c2f9a6e9980b562a14c033d63ef28bd90f733e2e188d79aa2"
+      },
+      {
+        "path": "img/m-0055/03.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/a02f10f/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2Fca%2F27%2Fa56be2614fc98b858b66df98e772%2Fn12200-dk4jj-t1-03.jpg",
+        "sha256": "55aac47cdd4ef333a37c8d650e237144066f77cb012b7c433c88fa46948c049a"
+      },
+      {
+        "path": "img/m-0055/04.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/719765c/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2F31%2F82%2Fe2199b684b61bde64f66017dabe2%2Fn12200-dk4jj-t1-04.jpg",
+        "sha256": "624498e691da4a39345433079f8bde476a990126b17394a9e268d7414587ff2e"
+      },
+      {
+        "path": "img/m-0055/05.jpg",
+        "url": "https://sothebys-md.brightspotcdn.com/dims4/default/80281d7/2147483647/strip/true/crop/3543x3543+0+0/resize/2048x2048!/quality/90/?url=http%3A%2F%2Fsothebys-brightspot.s3.amazonaws.com%2Fmedia-desk%2F66%2F9b%2F4ee3fefc456aadc11136e1cccfe9%2Fn12200-dk4jj-t1-05.jpg",
+        "sha256": "542ecc39348951805490b76b8c1c39fb583b0be5440c11a25371ea7e2eb0d8c1"
+      }
+    ],
+    "notes": [
+      "Memorabilia subtype: sports",
+      "Public result not treated as verified hammer.",
+      "Condition/provenance statements are auction catalogue attributions.",
+      "Object year can denote the catalogued season, event or film release rather than a dated manufacturing year.",
+      "Career-biography dates were not treated as manufacturing or signing dates for this basketball."
+    ]
   }
 }

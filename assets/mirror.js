@@ -169,6 +169,6 @@
   }
   const footer = document.querySelector('#footerHost')?.shadowRoot;
   if (footer) all('button', footer).forEach(button => button.addEventListener('click', () => {
-    if (button.textContent.includes('Privacy')) openDialog('Privacy','This site uses FlintVellum’s existing analytics. Saved lots are stored in this browser.');
+    if (button.textContent.includes('Privacy')) openDialog('Privacy','This site uses FlintVellum’s existing analytics. Saved lots are stored in this browser. Opening the currency reference fetches rates from Coinbase. Enquiry drafts stay on this page until you copy them or open your email app.');
   }));
 })();

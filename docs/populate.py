@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from collections import Counter
 from html import escape
 from urllib.parse import urlencode, urlparse
-import copy, hashlib, json, re, shutil, subprocess, sys
+import copy, hashlib, json, re, subprocess, sys
 ROOT=Path(__file__).resolve().parent.parent
 DATA=ROOT/'_catalogue'
 approved=json.loads((ROOT/'docs/site-copy.json').read_text())
@@ -13,15 +13,13 @@ catalogue_css='assets/catalogue.css?v='+hashlib.sha256((ROOT/'assets/catalogue.c
 DATA.mkdir(exist_ok=True)
 if len(sys.argv)>1:
     source=Path(sys.argv[1]).expanduser().resolve()
-    for name in ['lots.json','sources.json']:
-        shutil.copy2(source/name,DATA/name)
-    shutil.copytree(source/'img',ROOT/'img',dirs_exist_ok=True)
+    from import_catalogue import merge
+    merge(ROOT,source)
 assert (DATA/'lots.json').exists(), 'First run: python3 docs/populate.py ../auction-data'
 subprocess.run([sys.executable,str(ROOT/'docs/rebrand.py')],check=True,cwd=ROOT)
 lots=json.loads((DATA/'lots.json').read_text());sources=json.loads((DATA/'sources.json').read_text())
-assert len(lots)==250 and len({x['id'] for x in lots})==250
+assert len(lots)==len({x['id'] for x in lots})
 assert all(x['status']=='closed' for x in lots)
-assert sum(len(x['images']) for x in lots)==947
 for x in lots:
     for name in x['images']:assert (ROOT/name).is_file(), name
 byid={x['id']:x for x in lots}
@@ -50,8 +48,26 @@ def editorial(el,cat,eager=False):
     for e in el.select('source'):e.decompose()
 def price(x):
     basis=sources[x['id']]['estimateBasis']
-    label='Derived range' if basis=='derived_from_verified_sale' else 'Source estimate'
+    label='Derived historical range · GBP' if basis=='derived_from_verified_sale' else 'Historical estimate · GBP'
     return label,money(x['estimateLow'])+' – '+money(x['estimateHigh'])
+def enquiry_only(x):
+    # This is a sourcing route for a similar object, never a claim of available stock.
+    return int(hashlib.sha256(('flintvellum-enquiry:'+x['id']).encode()).hexdigest()[:8],16)%3==0
+def status_label(x):return 'Enquiry only' if enquiry_only(x) else 'Auction closed'
+def currency_reference(x):
+    return f'''<details class="fv-currency"><summary>Currency reference</summary><form hidden><div class="fv-form-row"><label>Amount in GBP<input name="amount" type="number" inputmode="decimal" min="0.01" max="1000000000000" step="0.01" value="{x['estimateLow']}" required></label><label>Convert to<select name="asset"><option value="BTC">Bitcoin</option><option value="ETH">Ethereum</option><option value="USDC">USDC</option><option value="USDT">USDT</option></select></label></div><p class="fv-conversion" data-conversion role="status" aria-live="polite"></p><p class="fv-price-note" data-rate-status></p><button type="submit" class="fv-text-button" data-refresh-rates>Refresh rates</button></form><noscript><p>Enable JavaScript to use the currency reference.</p></noscript><p class="fv-price-note">Indicative conversion using <a href="https://docs.cdp.coinbase.com/coinbase-app/track-apis/exchange-rates" target="_blank" rel="noopener">Coinbase reference rates</a>, excluding fees. This is not a settlement quote.</p></details>'''
+def enquiry_form(x):
+    if not enquiry_only(x):return ''
+    return f'''<details class="fv-enquiry"><summary>Prepare a private enquiry</summary><p>Looking for a similar piece? Set out your budget and preferences below.</p><p class="fv-price-note">This prepares a draft for your email app. Nothing is sent from this page.</p><form data-enquiry-form data-title="{E(display_title(x))}" hidden><div class="fv-form-row"><label>Proposed budget in GBP<input name="budget" type="number" inputmode="decimal" min="0.01" max="1000000000000" step="0.01" required placeholder="Your proposed amount"></label><label>Preferred settlement<select name="preference"><option value="BTC">Bitcoin</option><option value="ETH">Ethereum</option><option value="USDC">USDC</option><option value="USDT">USDT</option><option value="other">Other major asset, on request</option></select></label></div><label>What matters to you?<textarea name="notes" rows="3" maxlength="2000" placeholder="Condition, provenance, or another detail you have in mind"></textarea></label><button class="chr-button chr-button--secondary chr-button--lg chr-button--light" type="submit"><span class="chr-button__text">Prepare enquiry</span></button></form><noscript><p>Enable JavaScript to prepare an enquiry.</p></noscript><div data-enquiry-result hidden><label>Your enquiry draft<textarea readonly rows="9" aria-label="Your enquiry draft"></textarea></label><div class="fv-enquiry-actions"><button type="button" class="fv-text-button" data-copy-draft>Copy enquiry</button><a data-email-draft>Open email draft ↗</a></div><p class="fv-price-note" data-copy-status role="status" aria-live="polite"></p></div></details>'''
+def price_detail(x):
+    label,value=price(x)
+    src=sources[x['id']]
+    if src['estimateBasis']=='derived_from_verified_sale':
+        note='A derived range of 80–120% of the verified historical hammer price, converted to GBP. This is not a published auction estimate or an asking price.'
+    else:
+        note='The original auction estimate, shown as an approximate GBP equivalent. This is a historical reference, not an asking price.'
+    result=f'<div><dt>Historical hammer · GBP</dt><dd>{money(x["result"])}</dd></div>' if x['result'] is not None else ''
+    return f'<dl class="fv-lot-prices"><div><dt>{label}</dt><dd>{value}</dd></div>{result}</dl><p class="fv-price-note">{note}</p>'
 s=soup((ROOT/'index.html').read_text());company=soup((ROOT/'company.html').read_text())
 lot_template=copy.deepcopy(s.find('chr-lot-tile'))
 def lot_tile(x):
@@ -59,8 +75,10 @@ def lot_tile(x):
     image(tile,x)
     for e in tile.select('[id]'):del e['id']
     anchor=tile.select_one('.chr-lot-tile__link');anchor['href']=url(x);settext(anchor,display_title(x))
-    settext(tile.select_one('.chr-lot-tile__secondary-title'),CATS[x['category']]+' · Auction closed')
+    settext(tile.select_one('.chr-lot-tile__secondary-title'),CATS[x['category']]+' · '+status_label(x))
     for el in tile.select('.chr-lot-tile__price-container,.chr-lot-tile__dynamic-price'):el.decompose()
+    label,value=price(x)
+    appendhtml(tile.select_one('.chr-lot-tile__content'),f'<p class="fv-tile-price"><span>{label}</span><strong>{value}</strong></p>')
     button=tile.select_one('chr-button-save-lot button');button['data-save-lot']=x['id'];button['data-lot-title']=display_title(x);button['aria-label']='Save '+display_title(x);settext(button.select_one('.chr-button__text'),'Save lot')
     return tile
 
@@ -133,7 +151,7 @@ s.main['class']=['fv-home']
 # The editorial highlight carousel uses real lot records.
 promo=sections[0];promo['id']='discover';promo['class'].append('fv-discover');settext(promo.find('h2'),'Selected from the archive')
 for tile,id in zip(promo.select('.glide__slide'),['w-0094','c-0014','m-0016','w-0051','c-0022','m-0011']):
-    x=byid[id];image(tile,x);settext(tile.select_one('.chr-auction-tile-next__detail span'),CATS[x['category']]+' · Auction closed');settext(tile.find('h3'),display_title(x));tile.find('a')['href']=url(x)
+    x=byid[id];image(tile,x);settext(tile.select_one('.chr-auction-tile-next__detail span'),CATS[x['category']]+' · '+status_label(x));settext(tile.find('h3'),display_title(x));tile.find('a')['href']=url(x)
 # A photographic introduction to the house's collecting specialisms.
 specialisms=sections[1];specialisms.clear();specialisms['id']='specialisms';specialisms['class']=['chr-section','fv-specialisms']
 appendhtml(specialisms,'<div class="container-fluid"><header><p class="chr-label">OUR SPECIALISMS</p><h2 class="chr-heading-l-serif">Follow your fascination.</h2><p>Precision. Obsession. A moment that never quite leaves you.</p></header><div class="fv-specialism-grid"></div></div>')
@@ -148,7 +166,7 @@ for category,cat in zip(company.select('#collectibles .category'),CATS):
 trending=sections[2];settext(trending.find('h2'),'Selected lots')
 for a in trending.select('a[href]'):a['href']='catalogue.html'
 track=trending.select_one('.glide__slides');tile_wrapper=copy.deepcopy(track.find(recursive=False));track.clear()
-featured=['w-0009','c-0001','m-0020','w-0022','c-0013','m-0039','w-0049','c-0057','m-0005','w-0065','c-0036','m-0006']
+featured=['w-0101','c-0101','m-0053','w-0022','c-0013','m-0039','w-0049','c-0057','m-0005','w-0065','c-0036','m-0006']
 for id in featured:
     wrapper=copy.deepcopy(tile_wrapper);wrapper.clear();wrapper.append(lot_tile(byid[id]));track.append(wrapper)
 # Replace the newsletter promise with a functioning catalogue action.
@@ -156,7 +174,7 @@ banner=sections[3];settext(banner.find('h3'),'A collection to return to');settex
 b= banner.find('button');b.name='a';b.attrs={'class':b['class'],'href':'catalogue.html?saved=1'};settext(b.select_one('.chr-button__text'),'VIEW SAVED LOTS');image(banner,byid['w-0025']);banner['class'].append('fv-saved-banner')
 stories=sections[4];settext(stories.find('h2'),'Objects in focus')
 for tile,id in zip(stories.select('.chr-feature-card-next'),['m-0004','c-0026','w-0058']):
-    x=byid[id];image(tile,x);settext(tile.find('time'),'Auction closed');settext(tile.select_one('.chr-feature-card-next__category'),CATS[x['category']]);a=tile.select_one('.chr-feature-card-next__link');settext(a,display_title(x));a['href']=url(x)
+    x=byid[id];image(tile,x);settext(tile.find('time'),status_label(x));settext(tile.select_one('.chr-feature-card-next__category'),CATS[x['category']]);a=tile.select_one('.chr-feature-card-next__link');settext(a,display_title(x));a['href']=url(x)
 for a in stories.select('header a,footer a'):a['href']='catalogue.html'
 more=sections[5];settext(more.find('h2'),'More from FlintVellum')
 for tile,(title,desc,target,id) in zip(more.select('.chr-promo-banner-next'),[('The auction archive','Objects with a past. A place to look closer.','catalogue.html','w-0031'),('How it works','Consignment, authentication, custody and settlement.','company.html#how-it-works','m-0002'),('About the house','A London auction house built for collectors and consignors.','company.html#about','m-0043')]):
@@ -180,6 +198,10 @@ def newpage(title,html):
     page=copy.deepcopy(shell);page.title.string=title+' | FlintVellum';appendhtml(page.main,html);return page
 
 def write(page,path):
+    if page.select_one('.fv-currency'):
+        resource='assets/enquiry.js'
+        version=hashlib.sha256((ROOT/resource).read_bytes()).hexdigest()[:12]
+        page.select_one('script[src="fingerprint.js"]').insert_before(page.new_tag('script',src=resource+'?v='+version,defer=''))
     if path=='index.html':
         for resource in ['assets/experience.css','assets/experience.js']:
             version=hashlib.sha256((ROOT/resource).read_bytes()).hexdigest()[:12]
@@ -224,27 +246,30 @@ for role,key in zip(company.select('.role'),['backend','sales']):
 intro='Objects with a past. Stories still unfolding.'
 filter_options=lambda items:''.join(f'<option value="{E(v)}">{E(v)}</option>' for v in sorted(set(items)))
 page=newpage('The archive',f'''<div class="container-fluid fv-catalogue">
-<header class="fv-catalogue-heading"><div><p class="chr-label">THE FLINTVELLUM ARCHIVE</p><h1 class="chr-heading-xl-serif">Behind the glass.</h1><p>{intro}</p><p class="fv-archive-status">A selection from closed auctions.</p></div><img src="img/w-0088/01.jpg" alt="Breguet Classique Perpetual Calendar" fetchpriority="high"></header>
+<header class="fv-catalogue-heading"><div><p class="chr-label">THE FLINTVELLUM ARCHIVE</p><h1 class="chr-heading-xl-serif">Behind the glass.</h1><p>{intro}</p><p class="fv-archive-status">Historical objects. Private sourcing enquiries.</p></div><img src="img/w-0088/01.jpg" alt="Breguet Classique Perpetual Calendar" fetchpriority="high"></header>
 <nav class="fv-category-tabs" aria-label="Collection categories"><a href="catalogue.html" data-category="all">All objects</a>{''.join(f'<a href="{caturl(k)}" data-category="{k}">{v}</a>' for k,v in CATS.items())}</nav>
 <form class="fv-filters" id="catalogue-filters" role="search"><label class="fv-search-label">Search the archive<input name="q" type="search" placeholder="Maker, object or player"></label><label>Maker<select name="maker"><option value="">All makers</option>{filter_options(x['maker'] for x in lots)}</select></label><label class="fv-check"><input type="checkbox" name="saved" value="1"> Saved objects</label><button class="fv-text-button" type="reset">Clear filters</button><button class="fv-text-button" type="submit">Search</button></form>
-<div class="fv-results-line"><p id="result-count" role="status" aria-live="polite">From the archive · Auctions closed</p></div><div class="fv-lot-grid" id="lot-grid"></div>
+<div class="fv-results-line"><p id="result-count" role="status" aria-live="polite">From the archive · Discover and enquire</p></div><div class="fv-lot-grid" id="lot-grid"></div>
 <p class="fv-empty" hidden>No objects match your selection. <button type="button" data-clear-filters>Clear filters</button></p><nav class="fv-pagination" aria-label="Browse the collection"></nav>
 <noscript><p>Explore the collection below. Enable JavaScript to search, filter and save objects.</p><style>.fv-result[hidden]{{display:block!important}}.fv-filters,.fv-pagination{{display:none}}</style></noscript>
-<p class="fv-price-note">Historical objects from the original auction houses. These items are not offered for bidding by FlintVellum.</p></div>''')
+<p class="fv-price-note">Historical objects from the original auction houses. Enquiry-only entries let you prepare a sourcing request for a similar piece. None of these archived objects is offered for bidding here.</p></div>''')
 grid=page.find(id='lot-grid')
-for i,x in enumerate(lots):
+# Keep the additions easy to find, then interleave the rest in a stable shuffled order.
+additions=['w-0101','c-0101','m-0053','w-0102','m-0051','w-0103','m-0052','m-0054','m-0055']
+ordered=[byid[key] for key in additions]+sorted((x for x in lots if x['id'] not in additions),key=lambda x:hashlib.sha256(('flintvellum-selection:'+x['id']).encode()).hexdigest())
+for i,x in enumerate(ordered):
     record=page.new_tag('article',attrs={'class':'fv-result','data-id':x['id'],'data-category':x['category'],'data-maker':x['maker'],'data-search':' '.join(str(x[k]) for k in ['id','title','maker','reference','year','specs','provenance']).casefold(),'data-subtype':next((n.split(': ',1)[1] for n in sources[x['id']]['notes'] if n.startswith('Memorabilia subtype:')),'')})
     if i>=24:record['hidden']=''
     record.append(lot_tile(x));grid.append(record)
 write(page,'catalogue.html')
-# Original photographs and catalogue links remain available; dates and figures stay out of the presentation.
+# Original photographs and catalogue links accompany clearly labelled historical price evidence.
 for x in lots:
     src=sources[x['id']];name=display_title(x)
     source_name={'www.phillips.com':'Phillips','www.christies.com':'Christie’s','onlineonly.christies.com':'Christie’s','www.sothebys.com':'Sotheby’s','www.fanaticscollect.com':'Fanatics Collect'}.get(urlparse(src['url']).netloc,urlparse(src['url']).netloc)
     thumbs=''.join(f'<a class="fv-gallery-thumb" href="{E(path)}" data-gallery-index="{i}" aria-label="Select another view"><img src="{E(path)}" loading="lazy" alt="{E(name)} · catalogue photograph"></a>' for i,path in enumerate(x['images']))
     page=newpage(name,f'''<div class="container-fluid fv-detail"><nav class="fv-breadcrumb" aria-label="Breadcrumb"><a href="catalogue.html">Archive</a><span>/</span><a href="{caturl(x['category'])}">{CATS[x['category']]}</a></nav>
 <div class="fv-detail-grid"><section class="fv-gallery" aria-label="Object photographs"><a class="fv-gallery-main" href="{x['images'][0]}" aria-label="Enlarge lot photograph"><img id="lot-image" src="{x['images'][0]}" alt="{E(name)}" fetchpriority="high"></a><p class="fv-gallery-count">Select a view, or look closer.</p><div class="fv-gallery-thumbs">{thumbs}</div></section>
-<section class="fv-lot-summary"><p class="chr-label">FROM THE {CATS[x['category']].upper()} ARCHIVE</p><h1 class="chr-heading-l-serif">{E(name)}</h1><p class="fv-closed">Auction closed</p><p class="fv-source-credit">From the {E(source_name)} catalogue.</p><p class="fv-price-note">A historical auction record. This object is not available to bid on here.</p><button class="chr-button chr-button--secondary chr-button--lg chr-button--light chr-button--full-width" data-save-lot="{x['id']}" data-lot-title="{E(name)}" aria-pressed="false"><span class="chr-button__text">Save lot</span></button><a class="fv-source-link" href="{E(src['url'])}" target="_blank" rel="noopener">View the original catalogue ↗</a><details class="fv-source-notes"><summary>About this object</summary><p>Descriptions, condition, provenance, signatures, grading and game or screen use remain attributions by the original auction house. FlintVellum has not independently inspected these archived objects. Refer to the original catalogue for the full description and supporting records.</p></details></section></div>
+<section class="fv-lot-summary"><p class="chr-label">FROM THE {CATS[x['category']].upper()} ARCHIVE</p><h1 class="chr-heading-l-serif">{E(name)}</h1><p class="fv-closed">{status_label(x)}</p>{price_detail(x)}{currency_reference(x)}<p class="fv-source-credit">From the {E(source_name)} catalogue.</p><p class="fv-price-note">A historical auction record. This object is not available to bid on here.</p>{enquiry_form(x)}<button class="chr-button chr-button--secondary chr-button--lg chr-button--light chr-button--full-width" data-save-lot="{x['id']}" data-lot-title="{E(name)}" aria-pressed="false"><span class="chr-button__text">Save lot</span></button><a class="fv-source-link" href="{E(src['url'])}" target="_blank" rel="noopener">View the original catalogue ↗</a><details class="fv-source-notes"><summary>About this object</summary><p>Descriptions, condition, provenance, signatures, grading and game or screen use remain attributions by the original auction house. FlintVellum has not independently inspected these archived objects. Refer to the original catalogue for the full description and supporting records.</p></details></section></div>
 <section class="fv-related"><h2 class="chr-heading-l-serif">Further discoveries</h2><div class="fv-lot-grid"></div></section></div>''')
     page.head.insert(0,page.new_tag('base',href='../'))
     page.find('meta',attrs={'name':'description'})['content']=name+' · From the FlintVellum archive.'
@@ -256,6 +281,6 @@ archive=newpage('Inside the archive','''<article class="fv-archive-story"><div c
 write(archive,'archive.html');write(s,'index.html');write(company,'company.html')
 manifest=json.loads((ROOT/'clone.json').read_text())
 manifest['pages']=['/','catalogue.html','archive.html','company.html','careers/']+[url(x) for x in lots]
-manifest['collection']={'lots':250,'images':947,'status':'closed','buildData':'_catalogue/lots.json','buildSources':'_catalogue/sources.json'}
+manifest['collection']={'lots':len(lots),'images':sum(len(x['images']) for x in lots),'status':'closed','buildData':'_catalogue/lots.json','buildSources':'_catalogue/sources.json'}
 (ROOT/'clone.json').write_text(json.dumps(manifest,indent=2)+'\n')
 print('Built the photographic archive, all object galleries, company and careers pages.')

@@ -2,6 +2,9 @@
 import re
 
 OVERRIDES={
+ 'w-0102':'Richard Mille · The Beast',
+ 'w-0103':'De Bethune JPS',
+ 'm-0054':'Allen Iverson · Philadelphia jersey',
  'w-0005':'David Candaux Embème Prototype',
  'w-0008':'Genus Dragon',
  'w-0010':'H. Moser & Cie x MB&F Endeavour Cylindrical Tourbillon',

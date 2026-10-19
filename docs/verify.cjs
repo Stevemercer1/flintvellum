@@ -17,6 +17,57 @@ const server=http.createServer((req,res)=>{
  fs.mkdirSync(path.join(root,'docs/verify-shots'),{recursive:true});
  const go=async name=>{await page.goto(base+name,{waitUntil:'networkidle'});await page.evaluate(()=>document.fonts.ready)};
  async function layout(name,width){await page.setViewportSize({width,height:960});await page.waitForTimeout(150);const result=await page.evaluate(()=>({width:innerWidth,docWidth:document.documentElement.scrollWidth,broken:[...document.images].filter(i=>i.complete&&!i.naturalWidth).map(i=>i.src)}));layouts.push({page:name,...result});assert.equal(result.docWidth,width,`Overflow ${name} ${width}`);assert.deepEqual(result.broken,[],`Broken images ${name}`)}
+ if(process.argv.includes('--enquiry')||process.argv.includes('--currency-live')){
+  const live=process.argv.includes('--currency-live');let mode='ok',requests=0;
+  if(!live)await page.route('https://api.coinbase.com/v2/exchange-rates?currency=GBP',route=>{
+   requests++;
+   if(mode==='unavailable')return route.fulfill({status:503,contentType:'application/json',body:'{}'});
+   const data={currency:'GBP',rates:mode==='malformed'?{BTC:'invalid'}:{BTC:'0.00002',ETH:'0.0005',USDC:'1.25',USDT:'1.24'}};
+   return route.fulfill({contentType:'application/json',body:JSON.stringify({data})});
+  });
+  await go('lots/w-0103.html');assert.equal(requests,0);
+  await page.locator('.fv-currency summary').click();
+  await page.waitForFunction(()=>document.querySelector('[data-conversion]').textContent.includes('BTC'));
+  if(live){
+   for(const code of ['ETH','USDC','USDT']){await page.locator('[name=asset]').selectOption(code);await page.waitForFunction(code=>document.querySelector('[data-conversion]').textContent.endsWith(code),code)}
+   assert.deepEqual(errors,[]);assert.deepEqual(badResponses,[]);assert.deepEqual(failed,[]);
+   console.log('PASS: real Coinbase request from Firefox, browser CORS and all four asset conversions.');return;
+  }
+  await page.locator('[name=amount]').fill('1000');
+  assert.equal(await page.locator('[data-conversion]').innerText(),'Approximately 0.02000000 BTC');
+  for(const [asset,text] of [['ETH','0.500000 ETH'],['USDC','1,250.00 USDC'],['USDT','1,240.00 USDT']]){
+   await page.locator('[name=asset]').selectOption(asset);assert.equal(await page.locator('[data-conversion]').innerText(),'Approximately '+text);
+  }
+  assert.equal(requests,1,'Asset changes should reuse a fresh reference');
+  await page.locator('[name=amount]').fill('');assert.equal(await page.locator('[data-conversion]').innerText(),'');
+  await page.locator('[name=amount]').fill('-1');assert.equal(await page.locator('[data-conversion]').innerText(),'');
+  await page.locator('[name=amount]').fill('1000');
+  await page.evaluate(()=>{const now=Date.now;window.restoreNow=now;Date.now=()=>now()+360000});
+  await page.locator('[name=amount]').fill('1001');assert.match(await page.locator('[data-rate-status]').innerText(),/expired/);assert.equal(await page.locator('[data-conversion]').innerText(),'');
+  await page.evaluate(()=>Date.now=window.restoreNow);
+  mode='unavailable';await page.locator('[data-refresh-rates]').click();await page.waitForFunction(()=>document.querySelector('[data-rate-status]').textContent.includes('unavailable'));
+  assert.equal(await page.locator('[data-conversion]').innerText(),'');
+  mode='malformed';await page.locator('[data-refresh-rates]').click();await page.waitForFunction(()=>!document.querySelector('[data-refresh-rates]').disabled);assert.equal(await page.locator('[data-conversion]').innerText(),'');
+  mode='ok';await page.locator('[data-refresh-rates]').click();await page.waitForFunction(()=>document.querySelector('[data-conversion]').textContent.includes('USDT'));
+  await page.locator('.fv-enquiry summary').click();
+  await page.locator('[name=budget]').fill('45000');await page.locator('[name=preference]').selectOption('ETH');await page.locator('[name=notes]').fill('Original papers, please. <script>alert(1)</script>');
+  await page.getByRole('button',{name:'Prepare enquiry',exact:true}).click();
+  const draft=await page.getByRole('textbox',{name:'Your enquiry draft',exact:true}).inputValue();
+  assert.match(draft,/£45,000.00/);assert.match(draft,/Ethereum/);assert.match(draft,/not a binding bid/);assert.match(draft,/<script>alert\(1\)<\/script>/);
+  const email=await page.locator('[data-email-draft]').getAttribute('href');assert.ok(email.startsWith('mailto:?'));assert.equal(new URL(email).searchParams.get('body'),draft);assert.match(await page.locator('[data-copy-status]').innerText(),/Nothing has been sent/);
+  await page.locator('[data-copy-draft]').click();assert.match(await page.locator('[data-copy-status]').innerText(),/copied|Select and copy/);
+  for(const width of [320,390,768,1440]){
+   await layout('enquiry-and-currency',width);
+   const summary=await page.locator('.fv-lot-summary').boundingBox(),related=await page.locator('.fv-related').boundingBox();
+   assert.ok(related.y>=summary.y+summary.height+30,'Expanded enquiry must not overlap related objects');
+  }
+  await page.screenshot({path:path.join(root,'docs/verify-shots/enquiry-desktop.png'),fullPage:true,animations:'disabled'});
+  await page.setViewportSize({width:390,height:844});await page.locator('.fv-lot-summary').screenshot({path:path.join(root,'docs/verify-shots/enquiry-mobile.png')});
+  await page.locator('[name=budget]').fill('46000');assert.equal(await page.locator('[data-enquiry-result]').isVisible(),false);
+  await go('lots/w-0101.html');assert.equal(await page.locator('[data-enquiry-form]').count(),0);assert.equal(await page.locator('.fv-closed').textContent(),'Auction closed');
+  assert.deepEqual(errors,[]);assert.deepEqual(failed,[]);assert.ok(badResponses.every(r=>r.status===503&&r.url.startsWith('https://api.coinbase.com/')));
+  console.log('PASS: conversion arithmetic, separate stablecoin rates, invalid amounts, expiry, failed/malformed responses, recovery, enquiry drafts, email encoding, copying, no submission and narrow layouts.');return;
+ }
  if(process.argv.includes('--motion')){
   await page.addInitScript(()=>{window.startedReveals=0;const animate=Element.prototype.animate;Element.prototype.animate=function(...args){window.startedReveals++;return animate.apply(this,args)}});
   await page.setViewportSize({width:1440,height:1000});await go('');
@@ -79,14 +130,14 @@ const server=http.createServer((req,res)=>{
  const thumbs=page.locator('[data-gallery-index]');await thumbs.nth(1).click();assert.match(await page.locator('#lot-image').getAttribute('src'),/02.jpg/);await page.locator('.fv-gallery-main').click();assert.equal(await page.locator('.fv-lightbox').evaluate(e=>e.open),true);await page.getByRole('button',{name:'Next image',exact:true}).click();assert.match(await page.locator('.fv-lightbox img').getAttribute('src'),/03.jpg/);await page.keyboard.press('Escape');assert.equal(await page.locator('.fv-lightbox').evaluate(e=>e.open),false);
  for(const width of [1440,390,320,768,1024])await layout('lot',width);await page.setViewportSize({width:1440,height:1000});await page.locator('img[loading=lazy]').evaluateAll(es=>es.forEach(e=>e.loading='eager'));await page.waitForLoadState('networkidle');await page.screenshot({path:path.join(root,'docs/verify-shots/lot.png'),fullPage:true,animations:'disabled'});
  await go('catalogue.html');assert.equal(await page.locator('.fv-result:visible').count(),24);await page.getByRole('button',{name:'Next',exact:true}).click();assert.match(page.url(),/page=2/);assert.equal(await page.locator('.fv-result:visible').count(),24);
- await page.locator('a[data-category="cards"]').click();assert.match(await page.locator('#result-count').textContent(),/Auctions closed/);assert.equal(await page.locator('.fv-result:visible').count(),24);await page.locator('select[name="maker"]').selectOption({label:'Topps (Bowman)'});assert.ok(await page.locator('.fv-result:visible').count()>0);assert.equal(await page.locator('.fv-result:visible').evaluateAll(es=>es.every(e=>e.dataset.maker==='Topps (Bowman)')),true);await page.getByRole('button',{name:'Clear filters',exact:true}).click();
+ await page.locator('a[data-category="cards"]').click();assert.match(await page.locator('#result-count').textContent(),/Discover and enquire/);assert.equal(await page.locator('.fv-result:visible').count(),24);await page.locator('select[name="maker"]').selectOption({label:'Topps (Bowman)'});assert.ok(await page.locator('.fv-result:visible').count()>0);assert.equal(await page.locator('.fv-result:visible').evaluateAll(es=>es.every(e=>e.dataset.maker==='Topps (Bowman)')),true);await page.getByRole('button',{name:'Clear filters',exact:true}).click();
  await go('catalogue.html?category=memorabilia&subtype=film');assert.equal(await page.locator('.fv-result:visible').count(),14);await go('catalogue.html?category=memorabilia&subtype=sports');assert.equal(await page.locator('.fv-result:visible').count(),24);
  await go('catalogue.html?q=zzzznonexistent');assert.equal(await page.locator('.fv-empty').isVisible(),true);await page.locator('[data-clear-filters]').click();assert.equal(await page.locator('.fv-result:visible').count(),24);
- assert.doesNotMatch(await page.locator('main').innerText(),/\d/);assert.equal(await page.locator('#footerHost a[href^="data/"]').count(),0);
+ assert.equal(await page.locator('.fv-tile-price').count(),259);assert.equal(await page.locator('#footerHost a[href^="data/"]').count(),0);
  for(const width of [1440,390,320,768,1024]){await layout('catalogue',width);if([1440,390].includes(width))await page.screenshot({path:path.join(root,`docs/verify-shots/catalogue-${width}.png`),fullPage:true,animations:'disabled'})}
- await page.setViewportSize({width:390,height:844});const menu=header.getByRole('button',{name:'Menu',exact:true});await menu.click();assert.equal(await menu.getAttribute('aria-expanded'),'true');const detail=header.locator('.fv-drawer-open details').first();await detail.locator('summary').click();await detail.getByRole('link',{name:'Watches',exact:true}).click();await page.waitForURL('**/catalogue.html?category=watches');assert.match(await page.locator('#result-count').textContent(),/Auctions closed/);
+ await page.setViewportSize({width:390,height:844});const menu=header.getByRole('button',{name:'Menu',exact:true});await menu.click();assert.equal(await menu.getAttribute('aria-expanded'),'true');const detail=header.locator('.fv-drawer-open details').first();await detail.locator('summary').click();await detail.getByRole('link',{name:'Watches',exact:true}).click();await page.waitForURL('**/catalogue.html?category=watches');assert.match(await page.locator('#result-count').textContent(),/Discover and enquire/);
  const footer=page.locator('#footerHost');assert.equal(await footer.getByRole('link',{name:'The archive',exact:true}).isVisible(),true);
- for(const id of ['c-0022','m-0036','m-0038','m-0045','m-0047','w-0021']){await go('lots/'+id+'.html');await layout(id,320);await page.locator('.fv-source-notes summary').click();assert.equal(await page.locator('.fv-source-notes').getAttribute('open'),'');assert.doesNotMatch(await page.locator('main').innerText(),/\d/)}
+ for(const id of ['c-0022','m-0036','m-0038','m-0045','m-0047','w-0021','w-0101','w-0102','w-0103','c-0101','m-0051','m-0052','m-0053','m-0054','m-0055']){await go('lots/'+id+'.html');await layout(id,320);await page.locator('.fv-source-notes summary').click();assert.equal(await page.locator('.fv-source-notes').getAttribute('open'),'');assert.match(await page.locator('.fv-lot-prices').innerText(),/£[\d,]+/)}
  await go('company.html');for(const width of [320,390,1440])await layout('company',width);assert.equal(await page.locator('.role').count(),2);assert.equal(await page.locator('.recruiter a').getAttribute('href'),'mailto:stevelikejobs@proton.me?subject=FlintVellum%20role%20enquiry');
  await go('archive.html');for(const width of [320,390,1440])await layout('archive',width);assert.doesNotMatch(await page.locator('main').innerText(),/\d/);await page.screenshot({path:path.join(root,'docs/verify-shots/archive.png'),fullPage:true,animations:'disabled'});
  await page.locator('#headerHost').getByRole('link',{name:'FlintVellum home',exact:true}).click();await page.waitForURL(base);
