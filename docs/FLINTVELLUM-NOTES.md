@@ -1,8 +1,8 @@
 # FlintVellum site
 
-The captured Christie’s layout, typography, header and footer remain, with FlintVellum’s supplied branding. Online-sourced watch, trading-card and cinema photography now fills the hero and specialism sections. Credits and source links are in IMAGE-CREDITS.md. These editorial photographs illustrate collecting categories, not available inventory.
+The captured Christie’s layout, typography, header and footer remain, with FlintVellum’s supplied branding. The hero uses actual archived objects. Watch imagery comes from the supplied catalogue; sourced trading-card and cinema photography appears once each among the specialisms. The rejected stock watch photograph is removed. Credits and source links are in IMAGE-CREDITS.md. These editorial photographs illustrate collecting categories, not available inventory.
 
-The archive has short editorial names and no dates, prices, totals, grades, lot numbers or numbered page controls. The former report page is now a quiet invitation into the collection. The third footer column is empty. The collection report and public data-download paths have been removed.
+The archive has short editorial names and no dates, prices, totals, grades, lot numbers or numbered page controls. The former report page is now a quiet invitation into the collection. The shared footer is compact, with branding, visible navigation, recruitment contact and the approved settlement policy. Its source is docs/footer.html. The collection report and public data-download paths have been removed.
 
 The original 250 closed records and their source evidence remain unchanged in _catalogue/, excluded from GitHub Pages by _config.yml. All 947 original lot photographs remain under img/. Each object page keeps its gallery, original catalogue link, closed status and source-attribution qualification. Nothing in the archive is offered for bidding or represented as independently inspected by FlintVellum. Full source descriptions, condition, provenance, corrections and price evidence remain in the build records.
 
@@ -18,4 +18,6 @@ FlintVellum’s fingerprint.js is unchanged, with exactly one hook immediately b
 
 Rebuild with `python3 docs/populate.py`. Import replacement supplied records with `python3 docs/populate.py ../auction-data`; the importer does not copy the report. This first runs rebrand.py against the saved christies-pristine tag, then applies the current content. Do not run rebrand.py alone for publishing.
 
-`python3 docs/verify-data.py` checks every generated route, local asset, original photograph hash, attribution, protected copy and analytics hook. `node docs/verify.cjs` exercises the site in Firefox, including search, filters, saving, galleries, navigation and narrow layouts. The `--company` mode checks the careers and settlement routes. Screenshots stay in ignored docs/verify-shots/.
+`python3 docs/verify-data.py` checks every generated route, local asset, original photograph hash, attribution, protected copy and analytics hook. `node docs/verify.cjs` exercises the site in Firefox, including search, filters, saving, galleries, navigation and narrow layouts. The `--company` mode checks the careers and settlement routes. The `--motion` mode covers mouse dragging, keyboard selection, normal links, scroll effects, reduced-motion changes and content without JavaScript. Screenshots stay in ignored docs/verify-shots/.
+
+The homepage uses experience.css and experience.js for progressive scroll reveals, subtle image movement and a reading-progress line. The mirrored carousel code supports mouse dragging, touch and keyboard controls. Reduced motion disables movement, keyboard selections are immediate, and content stays visible without JavaScript. Each homepage photograph is unique.

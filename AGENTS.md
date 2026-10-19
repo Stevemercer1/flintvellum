@@ -28,8 +28,12 @@ All archive lots remain closed. Keep original sources and image files intact. Se
 
 ## Archive presentation
 
-Keep the archive quiet and mysterious. No dates, prices, totals, grades, lot numbers or numbered pagination in its visitor-facing text. Short editorial names live in docs/archive_display.py; the original source records remain unchanged in _catalogue/ for generation and source integrity. Object pages retain source links and attribution qualifications. Do not restore the collection report, public JSON downloads or the third footer column's contents.
+Keep the archive quiet and mysterious. No dates, prices, totals, grades, lot numbers or numbered pagination in its visitor-facing text. Short editorial names live in docs/archive_display.py; the original source records remain unchanged in _catalogue/ for generation and source integrity. Object pages retain source links and attribution qualifications. Do not restore the collection report or public JSON downloads. The footer uses a compact branded layout with visible navigation, the protected recruitment contact and the approved settlement policy; do not leave an empty column.
 
 The _catalogue directory and build documentation are excluded from GitHub Pages by _config.yml. Do not import REPORT.md when rebuilding. Editorial photographs illustrate specialisms, not inventory; credits are in docs/IMAGE-CREDITS.md. Preserve careers salaries and the approved business terms outside the archive.
 
 Read the do-not-cross skill before committing or pushing. Main publishes GitHub Pages. Run the existing relevant checks and confirm the updated live content after publishing.
+
+## Homepage character and motion
+
+Keep the auction-house typography and editorial structure, with restrained scroll reveals, image movement and responsive carousel controls. Respect reduced-motion preferences and keep content readable without JavaScript. Homepage photographs must be varied; do not repeat image files across its sections. The rejected stock watch photograph is removed. Use the supplied watch archive for watch imagery.

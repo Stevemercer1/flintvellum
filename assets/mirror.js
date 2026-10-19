@@ -24,7 +24,7 @@
     const upcoming = !!carousel.closest('chr-upcoming-auctions');
     let index = 0, step = 0, visible = 1;
     const bullets = all('.glide__bullet', carousel);
-    const update = () => {
+    const update = (instant = false) => {
       const activeItems = items.filter(item => !item.hidden);
       const width = track.clientWidth;
       visible = hero ? 1 : upcoming ? (innerWidth < 768 ? 1.15 : 2.4) : lots ? (innerWidth < 768 ? 1.4 : innerWidth < 1224 ? 3.3 : 4.3) : (innerWidth < 768 ? 1.15 : innerWidth < 1224 ? 2.2 : 3.2);
@@ -39,7 +39,7 @@
       });
       index = Math.min(index, Math.max(0, activeItems.length - Math.floor(visible)));
       slides.style.transform = `translate3d(${-index * step}px,0,0)`;
-      slides.style.transition = reduced.matches ? 'none' : 'transform 400ms cubic-bezier(.165,.84,.44,1)';
+      slides.style.transition = reduced.matches || instant ? 'none' : `transform ${hero ? 600 : 420}ms cubic-bezier(.23,1,.32,1)`;
       bullets.forEach((bullet, i) => {
         bullet.classList.toggle('glide__bullet--active', i === index);
         bullet.setAttribute('aria-pressed', String(i === index));
@@ -48,26 +48,52 @@
       const announcement = carousel.querySelector('.glide > .visually-hidden');
       if (announcement) announcement.textContent = hero ? items[index].querySelector('h2')?.textContent || 'Selected story' : 'More from the archive';
     };
-    const move = delta => {
+    const move = (delta, instant = false) => {
       const max = Math.max(0, items.filter(item => !item.hidden).length - Math.floor(visible));
       index = hero ? (index + delta + items.length) % items.length : Math.max(0, Math.min(max, index + delta));
-      update();
+      update(instant);
     };
     all('button', carousel).filter(b => !b.closest('.glide__slides')).forEach(button => {
       const label = `${button.getAttribute('aria-label') || ''} ${button.textContent}`.toLowerCase();
-      if (label.includes('previous')) button.addEventListener('click', () => move(-1));
-      if (label.includes('next')) button.addEventListener('click', () => move(1));
+      if (label.includes('previous')) button.addEventListener('click', e => move(-1,e.detail===0));
+      if (label.includes('next')) button.addEventListener('click', e => move(1,e.detail===0));
     });
     bullets.forEach((bullet, i) => {
-      const select = () => { index = i; update(); };
+      const select = e => { index = i; update(e?.detail===0); };
       bullet.addEventListener('click', select);
-      bullet.addEventListener('keydown', e => { if (['Enter', ' '].includes(e.key)) { e.preventDefault(); select(); } });
+      if(bullet.tagName!=='BUTTON')bullet.addEventListener('keydown', e => { if (['Enter', ' '].includes(e.key)) { e.preventDefault(); select(e); } });
     });
     let start;
     track.addEventListener('touchstart', e => { start = e.changedTouches[0].clientX; }, { passive: true });
     track.addEventListener('touchend', e => { const delta = e.changedTouches[0].clientX - start; if (Math.abs(delta) > 45) move(delta < 0 ? 1 : -1); }, { passive: true });
+    // Mouse dragging complements native touch scrolling and the keyboard controls.
+    track.classList.add('fv-draggable');
+    let drag=null,suppressClick=false;
+    track.addEventListener('dragstart',e=>e.preventDefault());
+    track.addEventListener('pointerdown',e=>{
+      if(e.pointerType!=='mouse'||e.button!==0||e.target.closest('button,input,select'))return;
+      suppressClick=false;drag={id:e.pointerId,x:e.clientX,y:e.clientY,moved:false};
+    });
+    track.addEventListener('pointermove',e=>{
+      if(!drag||drag.id!==e.pointerId)return;
+      const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+      if(!drag.moved){if(Math.abs(dx)<8||Math.abs(dx)<Math.abs(dy))return;drag.moved=true;track.setPointerCapture(e.pointerId);track.classList.add('fv-dragging')}
+      const max=Math.max(0,items.length-Math.floor(visible))*step;
+      let position=-index*step+dx;if(position>0)position*=.25;if(position<-max)position=-max+(position+max)*.25;
+      slides.style.transition='none';slides.style.transform=`translate3d(${position}px,0,0)`;
+    });
+    const finishDrag=e=>{
+      if(!drag||drag.id!==e.pointerId)return;
+      const moved=drag.moved,delta=e.clientX-drag.x;drag=null;track.classList.remove('fv-dragging');
+      if(track.hasPointerCapture(e.pointerId))track.releasePointerCapture(e.pointerId);
+      if(moved){suppressClick=true;if(e.type==='pointerup'&&Math.abs(delta)>45)move(delta<0?1:-1);else update();setTimeout(()=>suppressClick=false,0)}
+    };
+    track.addEventListener('pointerup',finishDrag);track.addEventListener('pointercancel',finishDrag);
+    track.addEventListener('pointerleave',()=>{if(drag&&!drag.moved)drag=null});
+    track.addEventListener('click',e=>{if(suppressClick){e.preventDefault();e.stopImmediatePropagation()}},true);
     carousel.addEventListener('fv:filtered', () => { index = 0; update(); });
-    new ResizeObserver(update).observe(track);
+    new ResizeObserver(()=>update(true)).observe(track);
+    reduced.addEventListener('change',()=>update(true));
     update();
   });
   all('chr-upcoming-auctions').forEach(section => {
@@ -142,19 +168,6 @@
     all('form', header).forEach(form => form.addEventListener('submit', e => { e.preventDefault(); const target=new URL('catalogue.html',document.baseURI);target.searchParams.set('q',form.querySelector('input').value);location.href=target.href; }));
   }
   const footer = document.querySelector('#footerHost')?.shadowRoot;
-  if (footer) {
-    const style = document.createElement('style');
-    style.textContent = '@media(max-width:1023px){nav[aria-label="Footer"]>div:nth-child(-n+3){border-bottom:1px solid var(--fv-footer-rule)}nav[aria-label="Footer"]>div:nth-child(-n+3) h3{padding:22px 0;cursor:pointer;display:flex;justify-content:space-between}nav[aria-label="Footer"]>div:nth-child(-n+3) h3:after{content:"+"}nav[aria-label="Footer"]>div:nth-child(-n+3):not(.fv-expanded)>:not(h3){display:none}nav[aria-label="Footer"]>div:nth-child(4) h3{display:none}nav[aria-label="Footer"]>div:nth-child(4){padding-top:28px;text-align:center}}';
-    footer.append(style);
-    all('nav[aria-label="Footer"]>div', footer).slice(0,3).forEach(group => {
-      const heading = group.querySelector('h3');
-      if (!heading) return;
-      heading.tabIndex = 0; heading.setAttribute('role','button'); heading.setAttribute('aria-label',heading.textContent.trim()); heading.setAttribute('aria-expanded','false');
-      const toggle = () => { const open = group.classList.toggle('fv-expanded'); heading.setAttribute('aria-expanded',String(open)); };
-      heading.addEventListener('click',toggle);
-      heading.addEventListener('keydown',e=>{if(['Enter',' '].includes(e.key)){e.preventDefault();toggle()}});
-    });
-  }
   if (footer) all('button', footer).forEach(button => button.addEventListener('click', () => {
     if (button.textContent.includes('Privacy')) openDialog('Privacy','This site uses FlintVellum’s existing analytics. Saved lots are stored in this browser.');
   }));

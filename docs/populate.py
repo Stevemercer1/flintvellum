@@ -27,7 +27,7 @@ for x in lots:
 byid={x['id']:x for x in lots}
 CATS={'watches':'Watches','cards':'Trading cards','memorabilia':'Memorabilia'}
 from archive_display import title as display_title
-EDITORIAL={'watches':('watches.jpg','A steel watch against a dark background'),'cards':('cards.jpg','Japanese Pokémon cards on a dark table'),'memorabilia':('cinema.jpg','A vintage projector casting a beam of light')}
+EDITORIAL={'watches':('img/w-0014/02.jpg','The movement of a Lederer Central Impulse Chronometer'),'cards':('assets/editorial/cards.jpg','Japanese Pokémon cards on a dark table'),'memorabilia':('assets/editorial/cinema.jpg','A vintage projector casting a beam of light')}
 def soup(text):return BeautifulSoup(text,'html.parser')
 def E(text):return escape(str(text),quote=True)
 def money(n,currency='GBP'):return ('£' if currency=='GBP' else currency+' ')+f'{n:,.0f}'
@@ -45,7 +45,7 @@ def image(el,x,n=0,eager=False):
 def editorial(el,cat,eager=False):
     img=el if el.name=='img' else el.find('img')
     name,alt=EDITORIAL[cat]
-    img.attrs={'src':'assets/editorial/'+name,'alt':alt,'class':'chr-img lazyloaded fv-editorial-photo','decoding':'async','loading':'eager' if eager else 'lazy'}
+    img.attrs={'src':name,'alt':alt,'class':'chr-img lazyloaded fv-editorial-photo','decoding':'async','loading':'eager' if eager else 'lazy'}
     if eager:img['fetchpriority']='high'
     for e in el.select('source'):e.decompose()
 def price(x):
@@ -92,26 +92,12 @@ def shared(page):
         field['placeholder']='Search the archive';field['aria-label']='Search the archive';field['name']='q';field.find_parent('form')['action']='catalogue.html'
     for e in header.select('a[href]'):
         if e['href'].startswith('https://'):e['href']='catalogue.html'
-    footer=page.select_one('#footerHost template');nav=footer.select_one('nav[aria-label="Footer"]')
-    footgroups=[('Explore',[('All lots','catalogue.html'),('Watches',caturl('watches')),('Trading cards',caturl('cards')),('Memorabilia',caturl('memorabilia')),('Saved lots','catalogue.html?saved=1')]),('The house',[('About FlintVellum','company.html#about'),('How it works','company.html#how-it-works'),('Our specialisms','company.html#collectibles'),('Careers','company.html#roles')]),('',[])]
-    for idx,group in enumerate(nav.find_all('div',recursive=False)):
-        if idx>=3:group.decompose();continue
-        title,links=footgroups[idx]
-        if not title:group.clear();group['aria-hidden']='true';continue
-        settext(group.find('h3'),title)
-        ul=group.find('ul');li_template2=copy.deepcopy(ul.find('li'));ul.clear()
-        for label,target in links:
-            li=copy.deepcopy(li_template2);a=li.find('a');settext(a,label);a['href']=target;ul.append(li)
-    for text in footer.find_all(string=True):
-        if '©' in text:text.replace_with(re.sub(r'\d{4}\s*','',str(text)))
-    # The legal/social row must not send visitors to another house's accounts or policies.
-    for a in list(footer.select('a[href]')):
-        if a['href'].startswith('http'):
-            parent=a.find_parent('li')
-            (parent or a).decompose()
-    for button in list(footer.select('button')):
-        if 'Cookie' in content(button):settext(button,'Privacy')
-        else:(button.find_parent('li') or button).decompose()
+    footer=page.select_one('#footerHost template')
+    logo=copy.deepcopy(header.select_one('.fv-full-logo'))
+    contact=copy.deepcopy(page.select_one('.recruiter'));contact['class']=['fv-footer-contact-copy']
+    footer.clear()
+    markup=(ROOT/'docs/footer.html').read_text().replace('{{logo}}',str(logo)).replace('{{contact}}',str(contact)).replace('{{policy}}',E(approved['settlementPolicy']))
+    appendhtml(footer,markup)
     for e in page.select('chr-error'):e.decompose()
     for a in page.select('a[tabindex="-1"]'):del a['tabindex']
     # Browser shadow roots inherit these semantic tokens; source component CSS is unchanged.
@@ -121,7 +107,7 @@ shared(s);shared(company)
 sections=s.main.find_all('section',recursive=False)
 # Reuse the captured image-slide markup for all four hero moments.
 hero=s.select_one('chr-header-carousel');slides=hero.select_one('.glide__slides');hero_template=copy.deepcopy(slides.select('chr-header-carousel-slide')[1]);slides.clear()
-hero_entries=[('THE FLINTVELLUM ARCHIVE','Some objects stay with you.',approved['homeHeroSubtitle'],'w-0001','catalogue.html'),('WATCHES','Independent minds. Enduring design.','From Berneron and Cartier to Patek Philippe, explore the watch archive.','w-0003',caturl('watches')),('TRADING CARDS','The collector’s eye','Discover graded cards, rare parallels and the names that define a collection.','c-0002',caturl('cards')),('MEMORABILIA','Beyond the screen. Beyond the game.','Explore objects catalogued from the worlds of film and sport.','m-0004',caturl('memorabilia'))]
+hero_entries=[('THE FLINTVELLUM ARCHIVE','Some objects stay with you.',approved['homeHeroSubtitle'],'w-0001','catalogue.html'),('WATCHES','Independent minds. Enduring design.','From Berneron and Cartier to Patek Philippe, explore the watch archive.','w-0003',caturl('watches')),('TRADING CARDS','The collector’s eye','Discover graded cards, rare parallels and the names that define a collection.','c-0002',caturl('cards')),('MEMORABILIA','Beyond the screen. Beyond the game.','Explore objects catalogued from the worlds of film and sport.','m-0014',caturl('memorabilia'))]
 for idx,(eyebrow,title,desc,id,target) in enumerate(hero_entries):
     slide=copy.deepcopy(hero_template);x=byid[id]
     slide.select_one('[aria-roledescription="Slide"]')['aria-label']=title
@@ -129,43 +115,52 @@ for idx,(eyebrow,title,desc,id,target) in enumerate(hero_entries):
     slide.select_one('.chr-hero-banner__details-list').clear()
     appendhtml(slide.select_one('.chr-hero-banner__details-list'),'<li class="chr-hero-banner__details-item"><span class="chr-label">AN INVITATION TO LOOK CLOSER</span></li>')
     a=slide.select_one('.chr-hero-banner__button a');a['href']=target;a['aria-label']='Explore '+('the archive' if idx==0 else CATS[x['category']]);settext(a.select_one('.chr-button__text'),'Explore the archive' if idx==0 else 'Explore '+CATS[x['category']].lower())
-    editorial(slide,x['category'],eager=idx==0)
+    image(slide,x,eager=idx==0)
+    slide.find('img')['class']='chr-img lazyloaded fv-hero-object'
+    if idx==0:slide.find('img')['fetchpriority']='high'
+    caption=fragment(f'<a class="fv-hero-object-caption" href="{url(x)}">{E(display_title(x))} <span>From the archive ↗</span></a>')
+    slide.select_one('.chr-hero-banner__video-wrapper').append(caption)
     banner=slide.select_one('.chr-hero-banner');banner['style']='--c-hero-banner-background:var(--fv-soft)'
     if idx==0:
         banner['class']=['chr-hero-banner','chr-hero-banner--carousel','chr-hero-banner--dark','chr-section--black'];banner['style']='--c-hero-banner-background:var(--fv-ink)'
         a['class']=[c.replace('--light','--dark') for c in a['class']]
     slide['data-theme-arrows']='light' if idx==0 else 'dark';slide['data-theme-pagination']=slide['data-theme-arrows'];slides.append(slide)
+# Named story controls and a direct, smooth-scroll invitation replace anonymous dots.
+for bullet,label in zip(hero.select('.glide__bullet'),['Discover','Watches','Cards','Memorabilia']):
+    bullet.name='button';bullet.clear();bullet['type']='button';bullet['aria-label']='Show '+label.lower();bullet.attrs.pop('role',None);settext(bullet,label)
+hero.select_one('.glide__bullets').append(fragment('<a class="fv-scroll-cue" href="#discover">Scroll to discover <span aria-hidden="true">↓</span></a>'))
+s.main['class']=['fv-home']
 # The editorial highlight carousel uses real lot records.
-promo=sections[0];settext(promo.find('h2'),'Selected from the archive')
-for tile,id in zip(promo.select('.glide__slide'),['w-0001','c-0002','m-0004','w-0003','c-0014','m-0016']):
+promo=sections[0];promo['id']='discover';promo['class'].append('fv-discover');settext(promo.find('h2'),'Selected from the archive')
+for tile,id in zip(promo.select('.glide__slide'),['w-0094','c-0014','m-0016','w-0051','c-0022','m-0011']):
     x=byid[id];image(tile,x);settext(tile.select_one('.chr-auction-tile-next__detail span'),CATS[x['category']]+' · Auction closed');settext(tile.find('h3'),display_title(x));tile.find('a')['href']=url(x)
 # A photographic introduction to the house's collecting specialisms.
 specialisms=sections[1];specialisms.clear();specialisms['id']='specialisms';specialisms['class']=['chr-section','fv-specialisms']
 appendhtml(specialisms,'<div class="container-fluid"><header><p class="chr-label">OUR SPECIALISMS</p><h2 class="chr-heading-l-serif">Follow your fascination.</h2><p>Precision. Obsession. A moment that never quite leaves you.</p></header><div class="fv-specialism-grid"></div></div>')
 for cat,desc in [('watches','Mechanical ingenuity. Unmistakable character.'),('cards','Small surfaces. Entire worlds.'),('memorabilia','Fragments of the screen. Echoes of the game.')]:
     name,alt=EDITORIAL[cat]
-    appendhtml(specialisms.select_one('.fv-specialism-grid'),f'<a class="fv-specialism" href="{caturl(cat)}"><div class="fv-specialism-image"><img src="assets/editorial/{name}" alt="{alt}" loading="lazy" decoding="async"></div><div class="fv-specialism-caption"><h3>{CATS[cat]}</h3><span aria-hidden="true">↗</span></div><p>{desc}</p></a>')
+    appendhtml(specialisms.select_one('.fv-specialism-grid'),f'<a class="fv-specialism" href="{caturl(cat)}"><div class="fv-specialism-image"><img src="{name}" alt="{alt}" loading="lazy" decoding="async"></div><div class="fv-specialism-caption"><h3>{CATS[cat]}</h3><span aria-hidden="true">↗</span></div><p>{desc}</p></a>')
 # The same photographs give the company specialisms a clear visual presence.
 for category,cat in zip(company.select('#collectibles .category'),CATS):
     name,alt=EDITORIAL[cat]
-    category.insert(0,fragment(f'<img class="fv-company-specialism" src="assets/editorial/{name}" alt="{alt}" loading="lazy" decoding="async">'))
+    category.insert(0,fragment(f'<img class="fv-company-specialism" src="{name}" alt="{alt}" loading="lazy" decoding="async">'))
 # The lot carousel retains source lot tiles, populated across all three categories.
 trending=sections[2];settext(trending.find('h2'),'Selected lots')
 for a in trending.select('a[href]'):a['href']='catalogue.html'
 track=trending.select_one('.glide__slides');tile_wrapper=copy.deepcopy(track.find(recursive=False));track.clear()
-featured=['w-0001','c-0001','m-0004','w-0003','c-0002','m-0016','w-0009','c-0013','m-0020','w-0014','c-0022','m-0036']
+featured=['w-0009','c-0001','m-0020','w-0022','c-0013','m-0039','w-0049','c-0057','m-0005','w-0065','c-0036','m-0006']
 for id in featured:
     wrapper=copy.deepcopy(tile_wrapper);wrapper.clear();wrapper.append(lot_tile(byid[id]));track.append(wrapper)
 # Replace the newsletter promise with a functioning catalogue action.
 banner=sections[3];settext(banner.find('h3'),'A collection to return to');settext(banner.select_one('.chr-body'),'Save the objects that catch your eye. Your selection stays in this browser, ready for your next visit.')
-b= banner.find('button');b.name='a';b.attrs={'class':b['class'],'href':'catalogue.html?saved=1'};settext(b.select_one('.chr-button__text'),'VIEW SAVED LOTS');editorial(banner,'watches')
+b= banner.find('button');b.name='a';b.attrs={'class':b['class'],'href':'catalogue.html?saved=1'};settext(b.select_one('.chr-button__text'),'VIEW SAVED LOTS');image(banner,byid['w-0025']);banner['class'].append('fv-saved-banner')
 stories=sections[4];settext(stories.find('h2'),'Objects in focus')
-for tile,id in zip(stories.select('.chr-feature-card-next'),['m-0004','c-0022','w-0001']):
+for tile,id in zip(stories.select('.chr-feature-card-next'),['m-0004','c-0026','w-0058']):
     x=byid[id];image(tile,x);settext(tile.find('time'),'Auction closed');settext(tile.select_one('.chr-feature-card-next__category'),CATS[x['category']]);a=tile.select_one('.chr-feature-card-next__link');settext(a,display_title(x));a['href']=url(x)
 for a in stories.select('header a,footer a'):a['href']='catalogue.html'
 more=sections[5];settext(more.find('h2'),'More from FlintVellum')
-for tile,(title,desc,target,id) in zip(more.select('.chr-promo-banner-next'),[('The auction archive','Objects with a past. A place to look closer.','catalogue.html','w-0003'),('How it works','Consignment, authentication, custody and settlement.','company.html#how-it-works','c-0013'),('About the house','A London auction house built for collectors and consignors.','company.html#about','m-0016')]):
-    settext(tile.find('h3'),title);settext(tile.select_one('.chr-body'),desc);tile.find('a')['href']=target;tile.find('a').attrs.pop('target',None);editorial(tile,byid[id]['category'])
+for tile,(title,desc,target,id) in zip(more.select('.chr-promo-banner-next'),[('The auction archive','Objects with a past. A place to look closer.','catalogue.html','w-0031'),('How it works','Consignment, authentication, custody and settlement.','company.html#how-it-works','m-0002'),('About the house','A London auction house built for collectors and consignors.','company.html#about','m-0043')]):
+    settext(tile.find('h3'),title);settext(tile.select_one('.chr-body'),desc);tile.find('a')['href']=target;tile.find('a').attrs.pop('target',None);image(tile,byid[id])
 # Make all remaining homepage calls to action local and remove stale source labels.
 for a in s.main.select('a[href]'):
     if a['href'].startswith('https://'):a['href']='catalogue.html'
@@ -180,11 +175,16 @@ more.insert_before(process)
 careers_callout=fragment('<section id="careers" class="chr-section fv-home-careers"><div class="container-fluid"><div><p class="chr-label">CAREERS</p><h2 class="chr-heading-l-serif">The work behind the house.</h2><p>Explore draft role outlines in auctions, settlement and consignments.</p></div><a class="chr-button chr-button--secondary chr-button--lg chr-button--light" href="careers/"><span class="chr-button__text">Explore the roles</span></a></div></section>')
 more.insert_before(careers_callout)
 
-shell=copy.deepcopy(s);shell.main.clear()
+shell=copy.deepcopy(s);shell.main.clear();shell.main.attrs.pop('class',None)
 def newpage(title,html):
     page=copy.deepcopy(shell);page.title.string=title+' | FlintVellum';appendhtml(page.main,html);return page
 
 def write(page,path):
+    if path=='index.html':
+        for resource in ['assets/experience.css','assets/experience.js']:
+            version=hashlib.sha256((ROOT/resource).read_bytes()).hexdigest()[:12]
+            if resource.endswith('.css'):page.head.append(page.new_tag('link',rel='stylesheet',href=resource+'?v='+version))
+            else:page.select_one('script[src="fingerprint.js"]').insert_before(page.new_tag('script',src=resource+'?v='+version,defer=''))
     for node in page.select('script[src],link[href]'):
         attr='src' if node.name=='script' else 'href'
         resource=node[attr].split('?')[0]
@@ -216,8 +216,6 @@ for role,key in zip(roles.select('.role'),['backend','sales']):
     requirements=''.join(f'<li>{E(item)}</li>' for item in detail['requirements'])
     appendhtml(role,f'<div class="fv-role-details"><p class="fv-role-intro">{E(detail["intro"])}</p><div class="fv-role-columns"><section><h4>What you would do</h4><ul>{responsibilities}</ul></section><section><h4>What you would bring</h4><ul>{requirements}</ul></section></div><section><h4>{E(detail["contextHeading"])}</h4><p>{E(detail["context"])}</p></section><section><h4>Working arrangements</h4><p>{E(detail["arrangements"])}</p></section></div>')
 careers.select_one('.fv-careers').append(roles)
-# The recruitment contact is already present beside the roles on this page.
-careers.select_one('#footerHost .fv-contact').decompose()
 write(careers,'careers/index.html')
 company.select_one('#roles-heading').insert_after(fragment(f'<p class="fv-role-status">{E(role_details["status"])}</p>'))
 for role,key in zip(company.select('.role'),['backend','sales']):
@@ -226,7 +224,7 @@ for role,key in zip(company.select('.role'),['backend','sales']):
 intro='Objects with a past. Stories still unfolding.'
 filter_options=lambda items:''.join(f'<option value="{E(v)}">{E(v)}</option>' for v in sorted(set(items)))
 page=newpage('The archive',f'''<div class="container-fluid fv-catalogue">
-<header class="fv-catalogue-heading"><div><p class="chr-label">THE FLINTVELLUM ARCHIVE</p><h1 class="chr-heading-xl-serif">Behind the glass.</h1><p>{intro}</p><p class="fv-archive-status">A selection from closed auctions.</p></div><img src="assets/editorial/watches.jpg" alt="A watch emerging from shadow" fetchpriority="high"></header>
+<header class="fv-catalogue-heading"><div><p class="chr-label">THE FLINTVELLUM ARCHIVE</p><h1 class="chr-heading-xl-serif">Behind the glass.</h1><p>{intro}</p><p class="fv-archive-status">A selection from closed auctions.</p></div><img src="img/w-0088/01.jpg" alt="Breguet Classique Perpetual Calendar" fetchpriority="high"></header>
 <nav class="fv-category-tabs" aria-label="Collection categories"><a href="catalogue.html" data-category="all">All objects</a>{''.join(f'<a href="{caturl(k)}" data-category="{k}">{v}</a>' for k,v in CATS.items())}</nav>
 <form class="fv-filters" id="catalogue-filters" role="search"><label class="fv-search-label">Search the archive<input name="q" type="search" placeholder="Maker, object or player"></label><label>Maker<select name="maker"><option value="">All makers</option>{filter_options(x['maker'] for x in lots)}</select></label><label class="fv-check"><input type="checkbox" name="saved" value="1"> Saved objects</label><button class="fv-text-button" type="reset">Clear filters</button><button class="fv-text-button" type="submit">Search</button></form>
 <div class="fv-results-line"><p id="result-count" role="status" aria-live="polite">From the archive · Auctions closed</p></div><div class="fv-lot-grid" id="lot-grid"></div>

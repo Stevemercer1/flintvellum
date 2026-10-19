@@ -20,7 +20,8 @@ for path in pages:
     if path.name not in ['index.html','company.html'] or path.parent.name=='lots':
         assert not re.search(r'\d',page.main.get_text()),path
     footer=page.select_one('#footerHost template nav[aria-label="Footer"]')
-    assert not footer.find_all('div',recursive=False)[2].get_text(strip=True),path
+    assert len(footer.select('a[href]'))==10,path
+    assert page.select_one('#footerHost .fv-footer-contact-copy a')['href']=='mailto:stevelikejobs@proton.me?subject=FlintVellum%20role%20enquiry',path
     for node in page.select('[src],a[href],link[href]'):
         value=node.get('src',node.get('href'));u=urlsplit(value)
         if u.scheme or u.netloc or not u.path:continue
@@ -60,8 +61,12 @@ for page in [home,company]:
 assert home.select_one('chr-header-carousel-slide .chr-heading-s-serif').get_text()==approved['homeHeroSubtitle']
 assert company.select_one('.hero-copy .intro').get_text()==approved['companyHeroSubtitle']
 assert len(home.select('.fv-specialism img'))==3
+homepage_photos=[image['src'] for image in home.main.select('img[src]')]
+assert len(homepage_photos)==len(set(homepage_photos)), 'Repeated homepage photograph'
+assert not (ROOT/'assets/editorial/watches.jpg').exists()
+assert home.select_one('chr-header-carousel-slide img')['src']=='img/w-0001/01.jpg'
 assert not (ROOT/'data').exists()
 assert '_catalogue' in (ROOT/'_config.yml').read_text()
 assert not list(ROOT.rglob('REPORT.md'))
 for a in home.main.select('a[href]'):assert not urlsplit(a['href']).netloc
-print('PASS: every route, original image hash, catalogue source, number-free archive, empty footer column, approved settlement/careers copy and analytics hook.')
+print('PASS: every route, original image hash, catalogue source, number-free archive, compact footer, approved settlement/careers copy and analytics hook.')

@@ -1,0 +1,79 @@
+/* A little movement, with the objects and the house typography kept in focus. */
+:root{--fv-ease-out:cubic-bezier(.23,1,.32,1);--fv-motion-fast:160ms;--fv-motion-reveal:650ms}
+.fv-smooth-scroll{scroll-behavior:smooth;scroll-padding-top:24px}
+.fv-home .chr-label,.fv-home .eyebrow{letter-spacing:.1em}
+.fv-home>section{scroll-margin-top:28px}
+.fv-home .chr-hero-banner{height:auto}
+.fv-home .chr-hero-banner__row{min-height:620px;align-items:stretch}
+.fv-home .chr-hero-banner__content-wrapper{flex:0 0 43%;max-width:43%;display:flex;align-items:center;padding-block:64px}
+.fv-home .chr-hero-banner__content{height:auto;padding-bottom:0;max-width:470px}
+.fv-home .chr-hero-banner__heading{font-size:clamp(45px,4.8vw,74px);line-height:1.03;letter-spacing:-.035em;max-width:11ch}
+.fv-home .chr-hero-banner .chr-heading-s-serif{font:300 clamp(16px,1.4vw,20px)/1.55 ABCArizonaSans,Arial,sans-serif;max-width:34ch}
+.fv-home .chr-hero-banner__video-wrapper{flex:0 0 57%;max-width:57%;position:relative;overflow:hidden}
+.fv-home .chr-hero-banner__image{height:100%;min-height:620px;aspect-ratio:auto;overflow:hidden}
+.fv-home .chr-hero-banner__image chr-image-next,.fv-home .chr-hero-banner__image .chr-img__wrapper,.fv-home .chr-hero-banner__image picture{display:block;height:100%;padding-top:0!important}
+.fv-home .chr-hero-banner__image img{height:100%;width:100%;object-fit:cover;object-position:center;position:absolute;inset:0;background:var(--fv-soft)}
+.fv-home chr-header-carousel-slide:nth-child(3) .chr-hero-banner__image img{object-fit:contain;padding:32px 0 56px}
+.fv-hero-object-caption{position:absolute;bottom:0;left:0;right:0;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px;background:var(--fv-ink);color:var(--fv-paper);font:300 13px/1.4 ABCArizonaSans,Arial,sans-serif;z-index:2}
+.fv-hero-object-caption span{white-space:nowrap;font-size:11px;opacity:.75}
+.fv-home .chr-hero-banner__button .chr-button{width:auto;min-height:46px;padding:14px 22px;gap:24px}
+.fv-home .chr-hero-banner__button .chr-button::before{content:none}
+.fv-home .chr-hero-banner__button .chr-button::after{content:'↗';position:static;inset:auto;display:inline-block;width:auto;height:auto;background:none;z-index:auto;font-size:18px;transition:transform var(--fv-motion-fast) var(--fv-ease-out)}
+.fv-home chr-header-carousel .glide__bullets{position:relative;inset:auto;transform:none;display:flex;align-items:center;gap:32px;min-height:68px;background:var(--fv-ink);color:var(--fv-paper);padding-block:10px;margin:0;max-width:none}
+.fv-home chr-header-carousel .glide__bullet{appearance:none;display:block;position:relative;flex:none;inset:auto;transform:none!important;width:auto;height:auto;margin:0;padding:12px 0;border:0;background:transparent;color:inherit;opacity:.55;font:400 12px/1.5 ABCArizonaSans,Arial,sans-serif;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;transition:opacity 180ms ease}
+.fv-home chr-header-carousel .glide__bullet::after{content:'';position:absolute;left:0;right:0;bottom:3px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform 300ms var(--fv-ease-out)}
+.fv-home chr-header-carousel .glide__bullet--active{opacity:1}
+.fv-home chr-header-carousel .glide__bullet--active::after{transform:scaleX(1)}
+.fv-scroll-cue{display:flex;gap:24px;align-items:center;margin-left:auto;font:300 12px/1.5 ABCArizonaSans,Arial,sans-serif;color:inherit}
+.fv-scroll-cue span{font-size:20px;transition:transform 200ms var(--fv-ease-out)}
+.fv-home .fv-discover h2{position:static!important;width:auto!important;height:auto!important;overflow:visible!important;clip:auto!important;white-space:normal!important;font:300 clamp(30px,3vw,44px)/1.15 ABCArizonaSerif,Georgia,serif;margin:0 0 32px!important}
+.fv-home .fv-specialisms{padding-block:80px 88px}
+.fv-home .fv-specialism-grid{grid-template-columns:1.05fr .9fr 1.05fr;gap:40px;align-items:start}
+.fv-home .fv-specialism:nth-child(2){padding-top:64px}
+.fv-home .fv-specialism:nth-child(3){padding-top:24px}
+.fv-home .fv-specialism-image{position:relative;overflow:hidden}
+.fv-home .fv-specialism img{transition:none}
+.fv-home .fv-specialism:hover img{transform:none}
+.fv-home .fv-specialism-caption span{transition:transform 200ms var(--fv-ease-out)}
+.fv-home .fv-saved-banner .chr-img{object-fit:cover!important;object-position:center 42%}
+.fv-home .fv-saved-banner h3{font:300 clamp(30px,3vw,42px)/1.12 ABCArizonaSerif,Georgia,serif;max-width:14ch}
+.fv-home .fv-saved-banner .chr-body{font-size:16px;line-height:1.6;max-width:40ch}
+.fv-home .chr-lot-tile__image,.fv-home .chr-auction-tile-next__image,.fv-home .chr-feature-card-next__header{overflow:hidden}
+.fv-home .chr-lot-tile__image img,.fv-home .chr-auction-tile-next__image img,.fv-home .chr-feature-card-next__header img{transition:transform 450ms var(--fv-ease-out)}
+.fv-home .chr-button{transition:transform var(--fv-motion-fast) var(--fv-ease-out),background-color 180ms ease,color 180ms ease}
+.fv-home .chr-button:active{transform:scale(.97)}
+.fv-home .glide__track{touch-action:pan-y}
+.fv-home .glide__track.fv-draggable{cursor:grab}
+.fv-home .glide__track.fv-dragging,.fv-home .glide__track.fv-dragging *{cursor:grabbing!important;user-select:none}
+.fv-scroll-progress{position:fixed;top:0;left:0;width:100%;height:2px;background:var(--fv-focus);transform:scaleX(0);transform-origin:left;z-index:80;pointer-events:none}
+@media(hover:hover) and (pointer:fine){
+ .fv-home .chr-lot-tile:hover .chr-img,.fv-home .chr-auction-tile-next:hover .chr-img,.fv-home .chr-feature-card-next:hover .chr-img{transform:scale(1.045)}
+ .fv-home .chr-hero-banner__button a:hover::after,.fv-home .fv-specialism:hover .fv-specialism-caption span{transform:translate(3px,-3px)}
+ .fv-scroll-cue:hover span{transform:translateY(4px)}
+ .fv-home .glide__bullet:hover{opacity:1}
+}
+@media(max-width:1023px){.fv-home .chr-hero-banner__row{min-height:560px}.fv-home .chr-hero-banner__image{min-height:560px}.fv-home .chr-hero-banner__heading{font-size:48px}.fv-home .chr-hero-banner__content-wrapper{padding-block:40px}.fv-home .fv-specialism-grid{gap:24px}.fv-hero-object-caption{padding:12px 18px}.fv-hero-object-caption span{display:none}.fv-home chr-header-carousel .glide__bullets{gap:24px}}
+@media(max-width:767px){
+ .fv-home .chr-hero-banner__row{display:block;min-height:0;height:auto}
+ .fv-home .chr-hero-banner__content-wrapper,.fv-home .chr-hero-banner__video-wrapper{flex:0 0 100%;max-width:100%}
+ .fv-home .chr-hero-banner__content-wrapper{display:block;height:auto;padding-block:36px}
+ .fv-home .chr-hero-banner__video-wrapper{height:420px;min-height:0}
+ .fv-home .chr-hero-banner__content{max-width:none}
+ .fv-home .chr-hero-banner__heading{font-size:clamp(40px,10vw,56px);max-width:13ch}
+ .fv-home .chr-hero-banner__details-list{margin-top:20px}
+ .fv-home .chr-hero-banner__image{height:380px;min-height:0}
+ .fv-home chr-header-carousel .glide__bullets{gap:20px;flex-wrap:wrap;justify-content:space-between;padding-block:10px 14px;min-height:58px}
+ .fv-home chr-header-carousel .glide__bullet{font-size:10px;letter-spacing:.04em}
+ .fv-scroll-cue{width:100%;justify-content:space-between;font-size:11px;padding-top:4px}
+ .fv-home .fv-specialisms{padding-block:48px}
+ .fv-home .fv-specialism-grid{grid-template-columns:1fr;gap:36px}
+ .fv-home .fv-specialism:nth-child(n){padding-top:0}
+ .fv-home .fv-specialism-image{aspect-ratio:5/4}
+ .fv-home .fv-saved-banner h3{max-width:none}
+}
+@media(prefers-reduced-motion:reduce){
+ .fv-smooth-scroll{scroll-behavior:auto}
+ .fv-home *{animation:none!important;transition:none!important}
+ .fv-home .chr-lot-tile:hover .chr-img,.fv-home .chr-auction-tile-next:hover .chr-img,.fv-home .chr-feature-card-next:hover .chr-img,.fv-home .chr-button:active{transform:none}
+ .fv-scroll-progress{display:none}
+}
