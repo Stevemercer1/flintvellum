@@ -5,9 +5,11 @@ from bs4 import BeautifulSoup
 from collections import Counter
 from html import escape
 from urllib.parse import urlencode, urlparse
-import copy, json, re, shutil, subprocess, sys
+import copy, hashlib, json, re, shutil, subprocess, sys
 ROOT=Path(__file__).resolve().parent.parent
 DATA=ROOT/'data'
+approved=json.loads((ROOT/'docs/site-copy.json').read_text())
+catalogue_css='assets/catalogue.css?v='+hashlib.sha256((ROOT/'assets/catalogue.css').read_bytes()).hexdigest()[:12]
 DATA.mkdir(exist_ok=True)
 if len(sys.argv)>1:
     source=Path(sys.argv[1]).expanduser().resolve()
@@ -57,7 +59,7 @@ def lot_tile(x):
     return tile
 
 def shared(page):
-    page.head.append(page.new_tag('link',rel='stylesheet',href='assets/catalogue.css'))
+    page.head.append(page.new_tag('link',rel='stylesheet',href=catalogue_css))
     script=page.new_tag('script',src='assets/catalogue.js',defer='');page.select_one('script[src="fingerprint.js"]').insert_before(script)
     header=page.select_one('#headerHost template')
     items=header.select('nav[aria-label="Primary"]>div>ul>li')
@@ -109,7 +111,7 @@ shared(s);shared(company)
 sections=s.main.find_all('section',recursive=False)
 # Reuse the captured image-slide markup for all four hero moments.
 hero=s.select_one('chr-header-carousel');slides=hero.select_one('.glide__slides');hero_template=copy.deepcopy(slides.select('chr-header-carousel-slide')[1]);slides.clear()
-hero_entries=[('THE FLINTVELLUM ARCHIVE','Objects worth knowing','Explore 250 watches, graded cards and pieces of sports and film memorabilia from closed auctions.','w-0001','catalogue.html'),('100 WATCHES','Independent minds. Enduring design.','From Berneron and Cartier to Patek Philippe, explore the watch archive.','w-0003',caturl('watches')),('100 TRADING CARD LOTS','The collector’s eye','Discover graded cards, rare parallels and the names that define a collection.','c-0002',caturl('cards')),('50 PIECES OF MEMORABILIA','Beyond the screen. Beyond the game.','Explore objects catalogued from the worlds of film and sport.','m-0004',caturl('memorabilia'))]
+hero_entries=[('THE FLINTVELLUM ARCHIVE','Objects worth knowing',approved['homeHeroSubtitle'],'w-0001','catalogue.html'),('100 WATCHES','Independent minds. Enduring design.','From Berneron and Cartier to Patek Philippe, explore the watch archive.','w-0003',caturl('watches')),('100 TRADING CARD LOTS','The collector’s eye','Discover graded cards, rare parallels and the names that define a collection.','c-0002',caturl('cards')),('50 PIECES OF MEMORABILIA','Beyond the screen. Beyond the game.','Explore objects catalogued from the worlds of film and sport.','m-0004',caturl('memorabilia'))]
 for idx,(eyebrow,title,desc,id,target) in enumerate(hero_entries):
     slide=copy.deepcopy(hero_template);x=byid[id]
     slide.select_one('[aria-roledescription="Slide"]')['aria-label']=title
@@ -168,16 +170,41 @@ for tile,(title,desc,target,id) in zip(more.select('.chr-promo-banner-next'),[('
 for a in s.main.select('a[href]'):
     if a['href'].startswith('https://'):a['href']='catalogue.html'
 
+# Keep the approved consignment policy visible on the homepage as well as the company page.
+process=copy.deepcopy(company.select_one('#how-it-works'))
+process['class']=['chr-section','fv-home-process']
+container=s.new_tag('div',attrs={'class':'container-fluid'})
+for node in list(process.contents):container.append(node.extract())
+process.append(container)
+more.insert_before(process)
+careers_callout=fragment('<section id="careers" class="chr-section fv-home-careers"><div class="container-fluid"><div><p class="chr-label">JOIN FLINTVELLUM</p><h2 class="chr-heading-l-serif">Careers at FlintVellum</h2><p>Explore our open roles in auctions, settlement and consignments. International candidates are welcome.</p></div><a class="chr-button chr-button--secondary chr-button--lg chr-button--light" href="careers/"><span class="chr-button__text">View open roles</span></a></div></section>')
+more.insert_before(careers_callout)
+
 shell=copy.deepcopy(s);shell.main.clear()
 def newpage(title,html):
     page=copy.deepcopy(shell);page.title.string=title+' | FlintVellum';appendhtml(page.main,html);return page
 
 def write(page,path):
+    for anchor in page.select('a[href]'):
+        if anchor['href'] in ['company.html#roles','#roles'] and 'Careers' in content(anchor):
+            anchor['href']='careers/'
+        elif anchor['href']=='company.html#how-it-works':
+            anchor['href']='index.html#how-it-works'
     for e in page.select('[id^="chr-img__"]'):del e['id']
     out=str(page).replace('viewbox=','viewBox=').replace('textlength=','textLength=').replace('lengthadjust=','lengthAdjust=')
     out=out.replace('<script defer="" src="fingerprint.js"></script>','<script src="fingerprint.js" defer></script>\n')
     assert out.count('fingerprint.js')==1 and re.search(r'<script src="fingerprint.js" defer></script>\s*</body>',out)
     (ROOT/path).parent.mkdir(parents=True,exist_ok=True);(ROOT/path).write_text(out)
+
+careers=newpage('Careers', '<div class="container-fluid fv-careers"><header><p class="chr-label">JOIN FLINTVELLUM</p><h1 class="chr-heading-xl-serif">Careers at FlintVellum</h1><p>Help build our auction house across auctions, settlement and consignments.</p></header></div>')
+careers.head.insert(0,careers.new_tag('base',href='../'))
+careers.find('meta',attrs={'name':'description'})['content']='Open roles at FlintVellum. UK or EU preferred; international candidates welcome. Must overlap UK hours.'
+roles=copy.deepcopy(company.select_one('#roles'))
+settext(roles.select_one('#roles-heading'),'Open roles')
+careers.select_one('.fv-careers').append(roles)
+# The recruitment contact is already present beside the roles on this page.
+careers.select_one('#footerHost .fv-contact').decompose()
+write(careers,'careers/index.html')
 
 intro='An archive of closed auctions from the original auction houses. These lots are not offered for bidding by FlintVellum.'
 filter_options=lambda items:''.join(f'<option value="{E(v)}">{E(v)}</option>' for v in sorted(set(items)))
@@ -221,7 +248,7 @@ for x in lots:
 archive=newpage('About the archive',f'''<article class="container-fluid fv-archive-notes"><p class="chr-label">THE COLLECTION</p><h1 class="chr-heading-xl-serif">About the archive</h1><p class="fv-intro">250 lots. 947 photographs. Three collecting worlds.</p><p>{intro}</p><p>The supplied collection was assembled on 19 October 2026 from Phillips, Christie’s, Sotheby’s and Fanatics Collect. It contains 100 watches, 100 trading-card lots and 50 pieces of memorabilia, including 14 film and 36 sports lots.</p><h2 id="prices" class="chr-heading-l-serif">Reading the prices</h2><p>All 250 auctions are closed. A verified hammer price is available for 127 lots. Where a public hammer was not verified, we say so. A missing result does not mean an item was unsold.</p><p>Watch and memorabilia estimates are source catalogue estimates. Card ranges are derived as 80%–120% of verified final hammer bids, because the card source does not publish estimates. Derived ranges are labelled throughout the archive.</p><p>Non-GBP figures are converted using the supplied Frankfurter rates dated 16 October 2026 and rounded to whole pounds. These are reference conversions, not exchange rates at the date of sale. Each lot’s source notes retain the original currency and price type. Premium-inclusive totals are never substituted for hammer prices.</p><h2 class="chr-heading-l-serif">Condition and attribution</h2><p>Catalogue condition, ownership, signatures and game or screen use remain attributions by the original auction house. No physical inspection, independent authentication, regrading or timekeeping test was performed for this archive.</p><p>Ten exact years are unknown. For memorabilia, a year can identify a season, event or film release. Source conflicts and catalogue corrections are retained on the relevant lot pages. The two-card lot c-0022 remains one lot, with both certificates recorded in its notes.</p><h2 class="chr-heading-l-serif">Using the collection</h2><p>Search by object, maker, player or reference. Narrow the archive by category, maker or auction, then open a lot to see every supplied photograph and its original source. Saved lots stay in this browser and do not require an account.</p><p><a class="fv-source-link" href="catalogue.html">Explore all 250 lots →</a></p><h2 class="chr-heading-l-serif">Collection records</h2><p><a href="data/REPORT.md">Full collection report</a> · <a href="data/lots.json">Lot data</a> · <a href="data/sources.json">Source records</a></p></article>''')
 write(archive,'archive.html');write(s,'index.html');write(company,'company.html')
 manifest=json.loads((ROOT/'clone.json').read_text())
-manifest['pages']=['/','catalogue.html','archive.html','company.html']+[url(x) for x in lots]
+manifest['pages']=['/','catalogue.html','archive.html','company.html','careers/']+[url(x) for x in lots]
 manifest['collection']={'lots':250,'images':947,'status':'closed','data':'data/lots.json','sources':'data/sources.json','report':'data/REPORT.md'}
 (ROOT/'clone.json').write_text(json.dumps(manifest,indent=2)+'\n')
 print('Populated 250 static lot pages, 947 images, homepage, catalogue, company and archive notes.')

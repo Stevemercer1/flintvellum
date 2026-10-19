@@ -105,3 +105,37 @@ chr-header-carousel-slide:first-child .chr-hero-banner__image img { object-fit:c
  .fv-related h2 { font-size:30px; }.fv-archive-notes h1 { font-size:42px; }.fv-archive-notes h2 { font-size:30px; }
 }
 @media(max-width:359px) { .fv-lot-grid { gap:30px 12px; }.fv-filters { grid-template-columns:minmax(0,1fr); }.fv-category-tabs { gap:0 18px; }.fv-lot-grid .chr-lot-tile__primary-title { font-size:16px; }.fv-lot-grid .chr-button { padding-inline:8px; } }
+
+/* House information follows the same editorial spacing as the archive. */
+.fv-home-process,.fv-home-careers,.fv-careers { font:300 16px/1.6 ABCArizonaSans,Arial,sans-serif; }
+.fv-home-process h2 { font:300 clamp(32px,3.2vw,48px)/1.15 ABCArizonaSerif,Georgia,serif; margin:16px 0 40px; }
+.fv-home-process .eyebrow { font-size:12px; letter-spacing:.08em; text-transform:uppercase; }
+.fv-home-process .steps { counter-reset:consignment; list-style:none; margin:0; padding:0; }
+.fv-home-process .steps li { display:grid; grid-template-columns:56px minmax(0,1fr) minmax(0,1.4fr); gap:24px; padding:28px 0; border-top:1px solid var(--fv-rule); counter-increment:consignment; }
+.fv-home-process .steps li::before { content:counter(consignment,decimal-leading-zero); font:300 30px/1.3 ABCArizonaSerif,Georgia,serif; }
+.fv-home-process h3 { font:300 26px/1.3 ABCArizonaSerif,Georgia,serif; margin:0; }
+.fv-home-process .steps p { margin:0; }
+.fv-home-process .terms { padding-top:24px; border-top:1px solid var(--fv-rule); font-size:14px; color:var(--fv-muted); }
+.fv-home-careers>.container-fluid { display:flex; align-items:center; justify-content:space-between; gap:32px; }
+.fv-home-careers h2 { margin:16px 0; }
+.fv-home-careers p { max-width:65ch; }
+.fv-home-careers a { flex-shrink:0; }
+.fv-careers { padding-block:60px 80px; max-width:1280px; }
+.fv-careers h1 { margin:18px 0 24px; }
+.fv-careers header { padding-bottom:40px; }
+.fv-careers #roles { border-top:1px solid var(--fv-rule); padding-top:32px; }
+.fv-careers #roles>.eyebrow { display:none; }
+.fv-careers h2 { font:300 32px/1.3 ABCArizonaSerif,Georgia,serif; margin:0 0 30px; }
+.fv-careers .role { padding:32px 0; border-bottom:1px solid var(--fv-rule); }
+.fv-careers h3 { font:300 28px/1.3 ABCArizonaSerif,Georgia,serif; margin:0 0 18px; }
+.fv-careers .role-location { color:var(--fv-muted); }
+.fv-careers .recruiter { padding-top:32px; }
+.fv-careers .recruiter a { text-decoration:underline; text-underline-offset:4px; }
+@media(max-width:767px) {
+ .fv-home-process .steps li { grid-template-columns:38px minmax(0,1fr); gap:14px; }
+ .fv-home-process .steps p { grid-column:2; }
+ .fv-home-careers>.container-fluid { flex-direction:column; align-items:flex-start; }
+ .fv-careers { padding-block:36px 50px; }
+ .fv-careers h1 { font-size:40px; }
+ .fv-careers h3 { font-size:25px; }
+}

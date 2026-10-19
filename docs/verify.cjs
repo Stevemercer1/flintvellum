@@ -17,6 +17,34 @@ const server=http.createServer((req,res)=>{
  fs.mkdirSync(path.join(root,'docs/verify-shots'),{recursive:true});
  const go=async name=>{await page.goto(base+name,{waitUntil:'networkidle'});await page.evaluate(()=>document.fonts.ready)};
  async function layout(name,width){await page.setViewportSize({width,height:960});await page.waitForTimeout(150);const result=await page.evaluate(()=>({width:innerWidth,docWidth:document.documentElement.scrollWidth,broken:[...document.images].filter(i=>i.complete&&!i.naturalWidth).map(i=>i.src)}));layouts.push({page:name,...result});assert.equal(result.docWidth,width,`Overflow ${name} ${width}`);assert.deepEqual(result.broken,[],`Broken images ${name}`)}
+ if(process.argv.includes('--company')){
+  for(const name of ['','company.html','careers/']){
+   await go(name);
+   for(const width of [320,390,768,1024,1440])await layout(name||'home',width);
+   if(name==='careers/'){
+    assert.equal(await page.locator('.role').count(),2);
+    assert.equal(await page.locator('.recruiter a').getAttribute('href'),'mailto:stevelikejobs@proton.me?subject=FlintVellum%20role%20enquiry');
+    await page.screenshot({path:path.join(root,'docs/verify-shots/careers-desktop.png'),fullPage:true});
+    await page.setViewportSize({width:390,height:844});
+    await page.screenshot({path:path.join(root,'docs/verify-shots/careers-mobile.png'),fullPage:true});
+   }
+  }
+  await go('');await page.setViewportSize({width:1440,height:1000});
+  await page.locator('#how-it-works').screenshot({path:path.join(root,'docs/verify-shots/settlement-desktop.png')});
+  await page.locator('#careers a').click();await page.waitForURL(base+'careers/');
+  await page.locator('#headerHost').getByRole('link',{name:'FlintVellum home',exact:true}).click();await page.waitForURL(base);
+  await page.setViewportSize({width:390,height:844});
+  const header=page.locator('#headerHost');await header.getByRole('button',{name:'Menu',exact:true}).click();
+  const house=header.locator('.fv-drawer-open details').filter({has:page.locator('summary',{hasText:'The house'})});
+  await house.locator('summary').click();await house.getByRole('link',{name:'Careers',exact:true}).click();await page.waitForURL(base+'careers/');
+  await page.locator('#headerHost').getByRole('button',{name:'Menu',exact:true}).click();
+  const houseAgain=page.locator('#headerHost .fv-drawer-open details').filter({has:page.locator('summary',{hasText:'The house'})});
+  await houseAgain.locator('summary').click();await houseAgain.getByRole('link',{name:'How it works',exact:true}).click();await page.waitForURL(base+'index.html#how-it-works');
+  assert.equal(await page.locator('#how-it-works').isVisible(),true);
+  await page.locator('#how-it-works').screenshot({path:path.join(root,'docs/verify-shots/settlement-mobile.png')});
+  assert.deepEqual(errors,[]);assert.deepEqual(failed,[]);assert.deepEqual(badResponses,[]);
+  console.log(JSON.stringify({layouts,errors,failed,badResponses,careersNavigation:'passed'},null,2));return;
+ }
  await go('');await page.locator('img[loading=lazy]').evaluateAll(es=>es.forEach(e=>e.loading='eager'));await page.waitForLoadState('networkidle');
  for(const width of [1440,390,320,768,1024]){await layout('home',width);if([1440,390].includes(width))await page.screenshot({path:path.join(root,`docs/verify-shots/${width}.png`),fullPage:true})}
  await page.setViewportSize({width:1440,height:1000});const hero=page.locator('chr-header-carousel');await hero.hover();const before=await hero.locator('.glide__slides').evaluate(e=>e.style.transform);await hero.getByRole('button',{name:'Next Slide',exact:true}).click();assert.notEqual(await hero.locator('.glide__slides').evaluate(e=>e.style.transform),before);await hero.getByRole('button',{name:'Show slide 1',exact:true}).click();

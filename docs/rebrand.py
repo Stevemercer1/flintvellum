@@ -2,7 +2,7 @@
 """Rebuild the FlintVellum branding from the saved pristine mirror, without cumulative edits."""
 from pathlib import Path
 from bs4 import BeautifulSoup
-import copy,re,subprocess
+import copy,json,re,subprocess
 ROOT=Path(__file__).resolve().parent.parent
 
 def git_file(ref):
@@ -12,6 +12,12 @@ def document(text):return BeautifulSoup(text,'html.parser')
 
 pristine=git_file('christies-pristine:index.html')
 original=document(git_file('christies-pristine^:index.html'))
+approved=json.loads((ROOT/'docs/site-copy.json').read_text())
+original.select_one('.hero-copy .intro').string=approved['companyHeroSubtitle']
+original.select('#how-it-works .steps li')[2].find('p').string=approved['settlementStep']
+for location in original.select('.role-location'):
+    location.string=approved['roleLocation']
+original.select_one('#roles-heading').string='Careers'
 s=document(pristine)
 mark=document((ROOT/'assets/brand/monogram.svg').read_text()).svg
 word=document((ROOT/'assets/brand/wordmark.svg').read_text()).svg
